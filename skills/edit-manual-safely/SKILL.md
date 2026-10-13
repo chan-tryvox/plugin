@@ -31,6 +31,8 @@ metadata:
 ## 본문 편집
 긴 문자열은 현재 원문을 파일에서 수정하고 변경 전후를 비교할 수 있다. 동일 문장이 여러 번 나오면 첫 항목을 임의 치환하지 않고 대상 문맥을 고른다. sandbox 파일 편집을 제품 저장으로 말하지 않는다.
 
+발화 실패의 원인을 가려 최소 수정할 때는 [음성 프롬프트 실패 진단과 최소 수정](../../references/voice-prompt-failure-guidance.md)을 따른다.
+
 Manual `content`는 전체 교체다. 새 본문에서 누락된 도구 참조·종료 규칙·정정 처리를 확인한다. `tool_ids`, `linked_manual_ids` 같은 파생 필드를 임의로 save payload에 넣지 않는다. Agent 설정의 `data.manuals`는 UUID 키를 사용하며 이를 보낼 때 현재 Manual 값을 보존한다. 구체 입력은 [공통 계약과 예제](../../references/workflow-examples.md)를 사용한다.
 
 ## 저장과 실패

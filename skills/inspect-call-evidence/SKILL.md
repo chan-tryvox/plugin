@@ -21,3 +21,5 @@ metadata:
 
 ## 전달
 원인 후보, 근거 call/버전/관련 발화, 실제 결과, 부족한 근거, 수정할 대상과 재현 상황을 남긴다. 실패 원인 확인만 요청했다면 변경하지 않는다. 수정을 요청받았다면 [본문 편집](../edit-manual-safely/SKILL.md), [도구 진단](../troubleshoot-agent-tool/SKILL.md), [결과 설정](../configure-call-results/SKILL.md)으로 필요한 부분만 이어간다.
+
+실패가 음성 문구나 prompt/Manual 규칙에 있는지 진단하고 고칠 때는 [음성 프롬프트 실패 진단과 최소 수정](../../references/voice-prompt-failure-guidance.md)을 적용한다.

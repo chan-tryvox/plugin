@@ -12,9 +12,11 @@ metadata:
 제품 호출에는 [공통 실행 계약](../../references/execution-contract.md)을 적용한다. 내장/외부의 질문·음성·파일 차이는 [호스트 연결](../../references/host-adapters.md)을 따른다. 도구는 연결된 서버가 제공하는 실제 이름과 스키마를 확인한 뒤 사용한다. 현재 구현 capability는 [구현 도구 스냅샷](../../references/implemented-tools.snapshot.json)과 [워크플로 capability 표](../../references/workflow-capabilities.json)에 있다.
 
 ## 먼저 읽을 상태와 판단
-기존 agent를 고치는 요청인지 새 구축인지 구분한다. 기존 대상이 있으면 [현재 상태](../explore-agent-context/SKILL.md)를 읽는다. 자료는 [근거 정리](../knowledge-grounding/SKILL.md), 업무 선택은 [음성 업무 설계](../voice-agent-design/SKILL.md)를 적용한다. 핵심 업무·방향·실제 완료 결과를 짧게 제안하고 중요한 미확정 판단만 묻는다. 새 구축이면 [유형 선택](../voice-agent-design/SKILL.md)을 적용하고, 유형과 이유를 한 줄로 알린다. 첫 `save_agent` 호출 직전 응답에 `유형: <Single + Manual n개 | Flow>. 이유: <한 문장>`을 반드시 쓴다(무인 실행이어도 쓴다). 사용자가 Flow를 지정했더라도 대화로 받는 접수·상담이 중심이면, 첫 저장 전에 'Single + Manual이 더 맞는 이유'를 한 번만 말하고 요청대로 진행한다. 기본은 Single + Manual이며 Flow로 정해지면 이 스킬 대신 [Flow 절차](../agents-platform/SKILL.md)를 따른다.
+기존 agent를 고치는 요청인지 새 구축인지 구분한다. 기존 대상이 있으면 [현재 상태](../explore-agent-context/SKILL.md)를 읽는다. 자료를 검토해 prompt·Manual·지식 중 둘 위치는 [근거 정리](../knowledge-grounding/SKILL.md)에서 결정하고, 업무 유형은 [음성 업무 설계](../voice-agent-design/SKILL.md)로 판단한다. 핵심 업무·방향·실제 완료 결과를 짧게 제안하고 중요한 미확정 판단만 묻는다. 새 구축이면 [유형 선택](../voice-agent-design/SKILL.md)을 적용하고, 유형과 이유를 한 줄로 알린다. 첫 `save_agent` 호출 직전 응답에 `유형: <Single + Manual n개 | Flow>. 이유: <한 문장>`을 반드시 쓴다(무인 실행이어도 쓴다). 사용자가 Flow를 지정했더라도 대화로 받는 접수·상담이 중심이면, 첫 저장 전에 'Single + Manual이 더 맞는 이유'를 한 번만 말하고 요청대로 진행한다. 기본은 Single + Manual이며 Flow로 정해지면 이 스킬 대신 [Flow 절차](../agents-platform/SKILL.md)를 따른다.
 
 ## 구축
+
+프롬프트나 Manual의 실제 음성 발화 문구를 작성할 때 [음성 프롬프트 기본 지침](../../references/voice-prompt-guidance.md)을 적용한다.
 ### 모델 고르기
 새 agent 모델을 정하거나 사용자가 요청한 기존 agent 모델을 바꿀 때마다 `list_models(kind=llm)`을 호출한다. 사용자가 모델 ID·모델명·계열·공급사를 직접 지정하지 않았다면 “좋은 모델로”, “최신 모델로”, “성능 좋게”, “빠른 모델”, “비용이 낮은 모델”, “품질이 좋은 모델” 같은 속도·비용·품질·최신 선호는 지정으로 보지 않는다. 호스트 자신의 모델 계열이라는 이유로 고르지 않으며, 기존 agent 모델은 변경 요청이 없으면 보존한다.
 
@@ -29,7 +31,7 @@ metadata:
 2. 시작점을 고른다. 새 agent는 위 [모델 고르기](#모델-고르기) 규칙을 템플릿과 직접 생성 모두에 적용한다. 맞는 업무 템플릿이 있으면 `list_agent_templates` → `get_agent_template`로 내용을 확인하고 `instantiate_agent_template`(payload.name)으로 Single을 만든다. 템플릿은 자동 게시되지 않으며 부분 실패 결과를 그대로 읽는다. 템플릿의 기본 프롬프트와 Manual은 업종·방향·완료 문구가 새 업무와 충돌할 수 있으므로 그대로 두지 않고 고쳐 쓴다. 없으면 `save_agent(mode=create)`로 Single을 만들고 선택 모델은 `data.llm.model`, 다시 쓴 프롬프트는 `data.prompt.prompt`에 넣는다. 반환된 `agent_id`를 보존한다.
 3. `get_agent` 또는 `list_manuals`로 현재 `head_revision`을 읽은 뒤 Manual마다 `save_manual`로 본문을 저장한다(생성이면 `mode=create`와 같은 `agent_id`, `payload.expected_head_revision`, `name`, `trigger`, `content`; 템플릿이 만든 Manual은 수정). 이 호출이 Manual을 에이전트에 연결하며, Manual을 저장할 때마다 revision이 바뀌므로 다음 Manual 전에 다시 읽는다. 다른 Manual이 `@manual:<manual_id>`로 가리킬 대상은 UUID가 필요하므로 먼저 저장한다. 폐기된 `manualIds`를 agent payload에 만들지 않는다. Manual이 쓰는 내장 도구는 본문에서 `@tool:이름`, API 도구는 `list_tools`가 돌려준 `@tool:<tool_id>`로 참조해야 실행된다.
 
-4. `list_manuals`로 Manual 수와 진단 건수를, `get_manual(agent_id, manual_id)`와 `get_agent(agent_id)`로 본문·참조·현재 revision을 재조회한다. 자료는 [지식](../knowledge-grounding/SKILL.md)(텍스트·URL), 외부 연동은 [도구](../connect-agent-tools/SKILL.md), 내부 추출·저장은 [결과 설정](../configure-call-results/SKILL.md)으로 연결한다. 실제 입력·ID 흐름은 [완성된 합성 여정](../../references/workflow-examples.md)에 있다. 그다음 아래 '운영 수준 점검' 1~8을 다시 읽은 본문에 대고 확인하고, 어긋난 Manual은 고친다.
+4. `list_manuals`로 Manual 수와 진단 건수를, `get_manual(agent_id, manual_id)`와 `get_agent(agent_id)`로 본문·참조·현재 revision을 재조회한다. 넓은 참고 자료가 필요하거나 사용자가 요청한 경우에만 [지식](../knowledge-grounding/SKILL.md)(텍스트·URL)을 연결하고, 외부 연동은 [도구](../connect-agent-tools/SKILL.md), 내부 추출·저장은 [결과 설정](../configure-call-results/SKILL.md)으로 연결한다. 실제 입력·ID 흐름은 [완성된 합성 여정](../../references/workflow-examples.md)에 있다. 그다음 아래 '운영 수준 점검' 1~9를 다시 읽은 본문에 대고 확인하고, 어긋난 Manual은 고친다.
 5. 저장한 상태를 `create_agent_version`으로 버전에 남긴다(반환된 버전 번호 보존, `list_agent_versions`로 확인). 운영에 쓰려면 사용자에게 어느 버전을 production으로 지정할지 요약해 확인받고 `publish_agent_version`을 호출한 뒤 `get_agent`(production)로 재조회한다. 게시는 번호·발신 경로에 바로 영향을 주며 모든 의존성의 불변 게시가 아니다.
 6. 이미 가진 번호에 연결하려면 [번호 연결](../connect-phone-service/SKILL.md), 발신하려면 [발신 운영](../operate-outbound-and-followup/SKILL.md), 결과 확인은 [통화 근거](../inspect-call-evidence/SKILL.md)로 이어간다. 음성 시험은 [직접 음성 시험](../prepare-voice-test/SKILL.md)에서 고객이 직접 한다. 번호 획득은 웹에서만 하며 첫 체험의 필수 단계가 아니다.
 
@@ -87,6 +89,7 @@ Manual을 쓸 때 지키고, 저장한 뒤 `get_agent`·`get_manual`로 다시 �
 6. 내용이 가까운 형제 Manual의 트리거에는 "…은 제외한다(○○ 담당)"를 붙인다.
 7. `{{변수}}`를 쓰면 `presetDynamicVariables`에 선언하고, 값이 비었을 때 할 말을 적는다.
 8. 위급·안전 신호(통증·사고·누출 등)는 접수 Manual 끝에 묻어 두지 않고, 연결 도구를 가진 별도 진입 Manual로 둔다.
+9. 새 Single 또는 공통 prompt 전체 작성이면 `# 말투와 발화`에 음성 기본 규칙을 한 번 넣는다. 세부 내용은 [음성 프롬프트 기본 지침](../../references/voice-prompt-guidance.md)을 따르고, 각 Manual에 반복하지 않는다.
 
 어긋난 곳은 같은 `manual_id`(또는 `agent_id`)로 고친 뒤, 사용자에게 "점검: ○○ 보완" 한 줄로 알린다.
 
