@@ -1,7 +1,7 @@
 {
   "version": "0.2.14",
   "skills_count": 26,
-  "sha256": "665b863fa70d9a003e98a19d4c453a1b0ebdc964a7b3d5d509dc9c2c1ac32150",
+  "sha256": "634e88e5e6ab623a40b73050978c5af1d5ef60194870b932f2f01a3b06722978",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
@@ -72,8 +72,8 @@
     "references/tool-schemas/update_organization.json": "5d5c84b2c888f1fa0af0331841e165f34acca95a33f380e39d41e6e6b1849fab",
     "references/tool-schemas/validate_flow.json": "1f1ea79ec4294fb2b467ad3c736e724d23dfcbee6d9d608a10c22541f89fca1f",
     "references/voice-prompt-failure-guidance.md": "abf0a81c125ffdef15479ead8403c4f12ebbde65f8c54a3f5b9c198dec91af8d",
-    "references/voice-prompt-guidance.md": "47ab82106a52e3372734033d9f6cb6e86994be11fff12d0bd8a27f19bec51d0f",
-    "references/voice-test-cases.md": "402a2b5604d5b7c97e8b46ff84a4a3d3b710e5844514641bcead9850160f5e0f",
+    "references/voice-prompt-guidance.md": "c3f3649cb07787176952f3855b03f978a3a966c189ab4982f3dbcac97d671356",
+    "references/voice-test-cases.md": "da8ad4b925a3672d5c4ec3ea3d971f6e5add6dd6c6dcd7761fae629cf0b7d429",
     "references/workflow-capabilities.json": "6db1f2606f8810060c6380c477883bb93977a04b780df4824dc46bcdbb5b4a72",
     "references/workflow-examples.md": "4baf31831c9f84ca6b899f40db13edf1645eaa4ae177845fdd1f70b6e4deec47",
     "references/workflow-guidance.md": "0748f76f3a4247d59d74445352ab8d0a525eac7745cc0e737c2ae8567f5eec44",
