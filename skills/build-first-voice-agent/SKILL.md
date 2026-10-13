@@ -31,7 +31,7 @@ metadata:
 2. 시작점을 고른다. 새 agent는 위 [모델 고르기](#모델-고르기) 규칙을 템플릿과 직접 생성 모두에 적용한다. 맞는 업무 템플릿이 있으면 `list_agent_templates` → `get_agent_template`로 내용을 확인하고 `instantiate_agent_template`(payload.name)으로 Single을 만든다. 템플릿은 자동 게시되지 않으며 부분 실패 결과를 그대로 읽는다. 템플릿의 기본 프롬프트와 Manual은 업종·방향·완료 문구가 새 업무와 충돌할 수 있으므로 그대로 두지 않고 고쳐 쓴다. 없으면 `save_agent(mode=create)`로 Single을 만들고 선택 모델은 `data.llm.model`, 다시 쓴 프롬프트는 `data.prompt.prompt`에 넣는다. 반환된 `agent_id`를 보존한다.
 3. `get_agent` 또는 `list_manuals`로 현재 `head_revision`을 읽은 뒤 Manual마다 `save_manual`로 본문을 저장한다(생성이면 `mode=create`와 같은 `agent_id`, `payload.expected_head_revision`, `name`, `trigger`, `content`; 템플릿이 만든 Manual은 수정). 이 호출이 Manual을 에이전트에 연결하며, Manual을 저장할 때마다 revision이 바뀌므로 다음 Manual 전에 다시 읽는다. 다른 Manual이 `@manual:<manual_id>`로 가리킬 대상은 UUID가 필요하므로 먼저 저장한다. 폐기된 `manualIds`를 agent payload에 만들지 않는다. Manual이 쓰는 내장 도구는 본문에서 `@tool:이름`, API 도구는 `list_tools`가 돌려준 `@tool:<tool_id>`로 참조해야 실행된다.
 
-4. `list_manuals`로 Manual 수와 진단 건수를, `get_manual(agent_id, manual_id)`와 `get_agent(agent_id)`로 본문·참조·현재 revision을 재조회한다. 넓은 참고 자료가 필요하거나 사용자가 요청한 경우에만 [지식](../knowledge-grounding/SKILL.md)(텍스트·URL)을 연결하고, 외부 연동은 [도구](../connect-agent-tools/SKILL.md), 내부 추출·저장은 [결과 설정](../configure-call-results/SKILL.md)으로 연결한다. 실제 입력·ID 흐름은 [완성된 합성 여정](../../references/workflow-examples.md)에 있다. 그다음 아래 '운영 수준 점검' 1~9를 다시 읽은 본문에 대고 확인하고, 어긋난 Manual은 고친다.
+4. `list_manuals`로 Manual 수와 진단 건수를, `get_manual(agent_id, manual_id)`와 `get_agent(agent_id)`로 본문·참조·현재 revision을 재조회한다. 넓은 참고 자료가 필요하거나 사용자가 요청한 경우에만 [지식](../knowledge-grounding/SKILL.md)(텍스트·URL)을 연결하고, 외부 연동은 [도구](../connect-agent-tools/SKILL.md), 내부 추출·저장은 [결과 설정](../configure-call-results/SKILL.md)으로 연결한다. 실제 입력·ID 흐름은 [완성된 합성 여정](../../references/workflow-examples.md)에 있다. 그다음 아래 '운영 수준 점검' 1~10을 다시 읽은 본문에 대고 확인하고, 어긋난 Manual은 고친다.
 5. 저장한 상태를 `create_agent_version`으로 버전에 남긴다(반환된 버전 번호 보존, `list_agent_versions`로 확인). 운영에 쓰려면 사용자에게 어느 버전을 production으로 지정할지 요약해 확인받고 `publish_agent_version`을 호출한 뒤 `get_agent`(production)로 재조회한다. 게시는 번호·발신 경로에 바로 영향을 주며 모든 의존성의 불변 게시가 아니다.
 6. 이미 가진 번호에 연결하려면 [번호 연결](../connect-phone-service/SKILL.md), 발신하려면 [발신 운영](../operate-outbound-and-followup/SKILL.md), 결과 확인은 [통화 근거](../inspect-call-evidence/SKILL.md)로 이어간다. 음성 시험은 [직접 음성 시험](../prepare-voice-test/SKILL.md)에서 고객이 직접 한다. 번호 획득은 웹에서만 하며 첫 체험의 필수 단계가 아니다.
 
@@ -56,8 +56,8 @@ metadata:
 # 역할
 # 말투와 발화: 한 턴에 질문 하나, 이미 들은 값은 다시 묻지 않음, 숫자 읽는 법, 큰따옴표 문장은 그대로 말함, 대괄호는 실제 값으로 바꿔 말함, 날짜를 되물을 때 시스템 날짜로 계산할 수 없으면 요일을 붙이지 않는다; 접수만 하고 확정은 나중에 하는 업무면 '아직 확정은 아니다'를 마무리에 한 번 말한다
 # 공통 규칙: 모든 업무의 금지와 범위 밖 응대
-# Manual 선택: ① 위급·안전 ② 진행 중인 Manual 계속 ③ 트리거가 하나만 맞으면 그 Manual ④ 없으면 용건을 한 번 묻기
-# 마무리: 더 필요한 것 묻기 → 끝인사 → 종료 도구. 고객이 말을 마치기 전에 끊지 않는다
+# Manual 선택: 인사와 첫 용건 확인은 여기서 한다. 구체 업무가 확인되면 업무별 정보를 받거나 판단하기 전에 해당 Manual을 연다. ① 위급·안전 ② 진행 중인 Manual 계속 ③ 트리거가 하나만 맞으면 그 Manual ④ 없으면 용건을 한 번 묻기
+# 마무리: 마지막 도움을 제안하고 답을 기다린 뒤 더 없으면 종료한다. 명시적 종료 사유에는 질문을 생략하고, 종료 도구 인사를 중복하지 않는다.
 ```
 Manual 하나는 고객 의도 하나다(보통 3~10개).
 ```
@@ -76,7 +76,7 @@ Manual 하나는 고객 의도 하나다(보통 3~10개).
 1. 언제: <조건>. 입력: <값의 출처>. @tool:<이름 또는 tool_id>를 부른다.
    - 성공: <행동> / 없음: <행동> / 실패·지연: 다시 부르지 않고 <대안>.
 ### 완료
-1. 완료 조건을 확인한 뒤 결과를 알리고, 마무리 인사 뒤 <종료 도구>.
+1. 하위 Manual이면 원래 절차로 돌아간다. 전체 업무가 정상 완료되면 완료 조건을 확인해 결과를 알리고, 추가 도움 질문 → 답 대기 → 더 없으면 종료 도구 순서로 마친다. 새 요청이면 이어서 처리한다.
 ```
 
 ## 운영 수준 점검
@@ -84,12 +84,13 @@ Manual을 쓸 때 지키고, 저장한 뒤 `get_agent`·`get_manual`로 다시 �
 1. 질문 단계마다 "답이 없거나 불분명하면 한 번 다시 묻고, 그래도 안 되면 …" 가지를 둔다. 정보 제공 거절, 정정, 범위 밖 요청에도 할 행동을 적는다.
 2. 도구 호출마다 언제·입력·결과별 행동(성공/없음/실패·지연)을 쓰고, "실패하면 다시 부르지 않고 …(메모·콜백·안내)"를 적는다. "완료·접수·전송했다"는 성공 결과를 받은 뒤에만 말한다. 전환·문자·등록처럼 부작용이 있는 도구는 고객이 동의한 뒤 부른다.
 3. 순서가 중요한 곳은 게이트("…을 확인하기 전에는 …하지 않는다")로, 반복은 상한("최대 2회. 넘으면 …")으로 쓴다.
-4. 상담원 연결·연락처 확인처럼 두 Manual 이상이 쓰는 단계는 공용 Manual 하나에 두고 `@manual:<id>`로 넘긴다. 마무리 인사 문장은 프롬프트 `# 마무리`에 한 번만 쓰고, Manual 완료 단계에는 결과에 맞는 종료 도구만 적는다.
+4. 상담원 연결·연락처 확인처럼 두 Manual 이상이 쓰는 단계는 공용 Manual 하나에 두고 `@manual:<id>`로 넘긴다. 공통 마무리 문장은 프롬프트 `# 마무리` 한 곳에만 두고 [공통 순서](../../references/voice-prompt-guidance.md#마무리)를 따른다. 종료 결과에 확인되지 않은 콜백 상태를 덧붙이지 않는다.
 5. 프롬프트에 둔 규칙(금지·말투·정해진 거절 문구)을 Manual에 다시 쓰지 않는다. 같은 대상(Manual·종료 도구)은 늘 같은 이름으로 부른다.
-6. 내용이 가까운 형제 Manual의 트리거에는 "…은 제외한다(○○ 담당)"를 붙인다.
-7. `{{변수}}`를 쓰면 `presetDynamicVariables`에 선언하고, 값이 비었을 때 할 말을 적는다.
+6. 내용이 가까운 형제 Manual의 트리거에는 "…은 제외한다(○○ 담당)"를 붙인다. 실제 고객이 할 법한 대표 발화를 인접 트리거마다 대입해 담당을 정하고 겹침·공백을 조정한다. 평가용 발화는 저장된 Manual 내용에 넣지 않으며, 정해진 개수를 채우려 하지 않는다.
+7. `{{변수}}`를 쓰면 `presetDynamicVariables`에 선언하고, 고객에게 말할 값은 [음성 발화 지침](../../references/voice-prompt-guidance.md#발화와-데이터-값)에 맞춰 처리한다.
 8. 위급·안전 신호(통증·사고·누출 등)는 접수 Manual 끝에 묻어 두지 않고, 연결 도구를 가진 별도 진입 Manual로 둔다.
 9. 새 Single 또는 공통 prompt 전체 작성이면 `# 말투와 발화`에 음성 기본 규칙을 한 번 넣는다. 세부 내용은 [음성 프롬프트 기본 지침](../../references/voice-prompt-guidance.md)을 따르고, 각 Manual에 반복하지 않는다.
+10. 새 Manual 묶음은 의도한 진입 트리거부터 연결 Manual·각 분기·도구 참조와 종료/복귀까지 따라가며 전체 경로를 확인한다. 조건과 빠져나갈 경로가 분명한 순환은 오류로 단정하지 않고, 연결 깊이만으로 Flow를 선택하지 않는다. 서버 진단과 재조회도 확인하되 전체 경로 검토를 대신한다고 보지 않는다.
 
 어긋난 곳은 같은 `manual_id`(또는 `agent_id`)로 고친 뒤, 사용자에게 "점검: ○○ 보완" 한 줄로 알린다.
 
