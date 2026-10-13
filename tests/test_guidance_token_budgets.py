@@ -51,13 +51,15 @@ HOTPATH_BASELINE_TOKENS = {
 }
 SKILL_BASELINE_TOTAL = sum(BASELINE_SKILL_TOKENS.values())
 HOTPATH_BASELINE_TOTAL = sum(HOTPATH_BASELINE_TOKENS.values())
+HOTPATH_TOKEN_CAP = 16322  # User-approved +8% ceiling: floor(15,113 * 1.08).
 
-# The three entry-point skills stay individually within the same +5% bound as
-# the full hotpath. Other files have local allowances, with the aggregate cap
-# serving as the stricter guard against distributed growth.
+# The checklist and nine-step prose in manual-authoring restore the inspected
+# 0.2.14 operating guidance. The old 5% cap (5,794) cannot contain it; 6,600 is
+# just above that complete historical file's 6,585 tokens. The aggregate
+# hotpath ceiling remains the stricter guard against unrelated growth.
 ENTRY_SKILL_CAPS = {
     'skills/build-first-voice-agent/SKILL.md': 4538,
-    'skills/manual-authoring/SKILL.md': 5794,
+    'skills/manual-authoring/SKILL.md': 6600,
     'skills/voice-agent-design/SKILL.md': 3227,
 }
 
@@ -125,11 +127,12 @@ class GuidanceTokenBudgetTests(unittest.TestCase):
                 # changed skill room for required detail while stopping outliers.
                 # New skills have no historical per-file budget; they receive a
                 # 2,000-token ceiling and still count toward the aggregate cap.
-                cap = (baseline + max(200, math.ceil(baseline * 0.10))
-                       if baseline is not None else 2000)
+                local_cap = (baseline + max(200, math.ceil(baseline * 0.10))
+                             if baseline is not None else 2000)
+                cap = max(local_cap, ENTRY_SKILL_CAPS.get(path, 0))
                 self.assertLessEqual(actual, cap, f'{path}: {actual} tokens exceeds {cap}')
 
-    def test_entry_skills_stay_within_five_percent_of_baseline(self):
+    def test_entry_skills_stay_within_declared_caps(self):
         for path, cap in ENTRY_SKILL_CAPS.items():
             with self.subTest(path=path):
                 self.assertLessEqual(self.token_count(path), cap)
@@ -139,9 +142,51 @@ class GuidanceTokenBudgetTests(unittest.TestCase):
         actual = sum(self.token_count(path) for path in paths)
         self.assert_at_most_five_percent_over(actual, SKILL_BASELINE_TOTAL, 'all SKILL.md files')
 
-    def test_voice_authoring_hotpath_stays_within_five_percent(self):
+    def test_voice_authoring_hotpath_stays_within_user_token_cap(self):
         actual = sum(self.token_count(path) for path in HOTPATH_FILES)
-        self.assert_at_most_five_percent_over(actual, HOTPATH_BASELINE_TOTAL, 'voice authoring hotpath')
+        self.assertEqual(HOTPATH_TOKEN_CAP, math.floor(HOTPATH_BASELINE_TOTAL * 1.08))
+        self.assertLessEqual(actual, HOTPATH_TOKEN_CAP,
+                             f'voice authoring hotpath: {actual} is above {HOTPATH_TOKEN_CAP}')
+
+    def test_manual_authoring_checklist_has_inspectable_continuous_items(self):
+        text = (ROOT / 'skills/manual-authoring/SKILL.md').read_text(encoding='utf-8')
+        start = text.index('## 운영 수준 점검')
+        end = text.index('\n## Manual이 통화에서 쓰이는 방식', start)
+        checklist = text[start:end]
+        numbers = [int(value) for value in re.findall(r'(?m)^(\d+)\.\s', checklist)]
+        self.assertGreaterEqual(len(numbers), 9)
+        self.assertEqual(numbers, list(range(1, len(numbers) + 1)))
+        for phrase in (
+            '실패하면 다시 부르지 않고',
+            '최대 2회. 넘으면 …',
+            '…은 제외한다(○○ 담당)',
+            '부작용이 있는 도구는 고객 동의 뒤 호출한다',
+            '요청 접수·전송',
+            '고객의 수신·이용 가능',
+            '업무 완료',
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, checklist)
+
+    def test_manual_authoring_keeps_concrete_branch_and_return_rules(self):
+        text = (ROOT / 'skills/manual-authoring/SKILL.md').read_text(encoding='utf-8')
+        for phrase in (
+            '관찰 가능한 확인점(필요하면 화면 상태)을 정해 그곳까지만 안내한 뒤 답을 기다린다',
+            '반복에는 상한을 둔다: "한 번만", "최초 포함 최대 2회". 넘었을 때의 행동도 적는다.',
+            '이미 결과를 분명히 들었거나 단순 안내·고정 고지문·낭독 Flow인 경우 확인 질문을 덧붙이지 않는다',
+            '실제 화면 경로나 이름은 확인된 자료가 있을 때만 쓴다',
+            '뒤에서 쓸 값은 "…을 기억한다"로 적는다',
+            '확인된 값·완료한 점검·하위 Manual 결과를 유지해 원래 요청의 다음 미완료 단계로 돌아간다',
+            '다른 Manual로 넘길 때도 이 절차를 멈추고 `@manual:<id>`를 시작한 뒤 돌아올 지점을 적는다',
+        ):
+            with self.subTest(phrase=phrase):
+                self.assertIn(phrase, text)
+
+    def test_build_first_applies_the_operational_checklist_after_readback(self):
+        text = (ROOT / 'skills/build-first-voice-agent/SKILL.md').read_text(encoding='utf-8')
+        pointer = '[운영 수준 점검](../manual-authoring/SKILL.md#운영-수준-점검)'
+        self.assertEqual(text.count(pointer), 1)
+        self.assertIn('저장 뒤에는 재조회한 본문에 ' + pointer + '을 적용', text)
 
     def test_hotpath_has_no_repeated_long_prose_paragraphs(self):
         paragraphs = {}

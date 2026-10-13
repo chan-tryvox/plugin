@@ -1,7 +1,7 @@
 {
   "version": "0.2.15",
   "skills_count": 26,
-  "sha256": "e0daa4b098d9db73fea37b0a462956f7e5fd7c88a7010f3554272719ac9ce17b",
+  "sha256": "fc64e835aff257c3cbd98271f6e55f38d38eb136a0a5d64fa7e7592ffb1df132",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
@@ -78,7 +78,7 @@
     "references/workflow-examples.md": "4baf31831c9f84ca6b899f40db13edf1645eaa4ae177845fdd1f70b6e4deec47",
     "references/workflow-guidance.md": "0748f76f3a4247d59d74445352ab8d0a525eac7745cc0e737c2ae8567f5eec44",
     "skills/agents-platform/SKILL.md": "a3333b616e920bb88e6d5bdb8f85d8523ec22d823bbffe47e5329b7d4c8faa6a",
-    "skills/build-first-voice-agent/SKILL.md": "f873876a0319c86bfdc5ec4ba32046cc51891907186d3e88bfe4e3aedd122457",
+    "skills/build-first-voice-agent/SKILL.md": "b9031ba773c8ce6ba47ec78e07f4d2583e43898676ef0db56495f3ebb0ed506a",
     "skills/cli-authoring/SKILL.md": "2e2a7d292172144400bec6be029c0b8bb31d0bd8c96b20b45d87e8e504f757f1",
     "skills/configure-call-results/SKILL.md": "8b6022729456ad15f04f2d40f0f8405aa387548faa009529e29e9550073b0deb",
     "skills/configure-supporting-channel/SKILL.md": "1dc71d85082ad32c070b76b905aa44f13bc91c0d82664b65635f0568dd96c7e0",
@@ -89,7 +89,7 @@
     "skills/explore-agent-context/SKILL.md": "774d244c36cba2ed9146f7c64ee42bb520fcb8a28fedc681cae8386569aca5de",
     "skills/inspect-call-evidence/SKILL.md": "8222963ca4d7d51a6e40aa649c964b7bd27228080b6c63d80ac031191a6f0189",
     "skills/knowledge-grounding/SKILL.md": "193b52d2cd06ecfad4d9cf9f1d93ec845d202303d9c33057475e01600017e099",
-    "skills/manual-authoring/SKILL.md": "8646a9c5cd13b74cd1dc63d30ffcf3c40ed3b71e3095de708727fa585a8ac8b4",
+    "skills/manual-authoring/SKILL.md": "d2c2c2199940f2d92d2613ef6bb35ad34e98927348f1d2d2dbee3ab8762af9d4",
     "skills/operate-outbound-and-followup/SKILL.md": "03193756194f281761d6101499e6152063afff31e710d35d20b8977a65286d05",
     "skills/post-call-result-design/SKILL.md": "0648db9d8d8ebcd87a6443e7ab36080fae5e687abb20752fe3c7051b807ccf4d",
     "skills/prepare-voice-test/SKILL.md": "2342e7fc767f4d422b2f52652c4d632497b47b5c197753d27cfc3c201dc505b8",
