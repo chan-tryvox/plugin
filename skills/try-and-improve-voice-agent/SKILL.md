@@ -16,8 +16,9 @@ metadata:
 
 ## 필요한 수정만 조합
 - 말/질문/정정/마무리: [Manual 편집](../edit-manual-safely/SKILL.md).
+- 발화 실패를 실제 prompt/Manual 규칙과 연결하고 최소 수정: [음성 프롬프트 실패 진단과 최소 수정](../../references/voice-prompt-failure-guidance.md).
 - 도구 미호출·오류·불명: [도구 진단](../troubleshoot-agent-tool/SKILL.md).
-- 추출·저장: [결과 설정](../configure-call-results/SKILL.md).
+- 통화 후 추출·내부 결과 저장: [결과 설정](../configure-call-results/SKILL.md). 통화 중 필요한 상태·실행은 Manual이나 도구 연결을 따로 확인한다.
 - 끼어들기·지연·음성: [음성 조정](../tune-voice-behavior/SKILL.md).
 - 공유 변경: [영향 확인](../review-shared-impact/SKILL.md).
 

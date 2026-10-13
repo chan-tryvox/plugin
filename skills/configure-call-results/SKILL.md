@@ -12,7 +12,7 @@ metadata:
 제품 호출에는 [공통 실행 계약](../../references/execution-contract.md)을 적용한다. 내장/외부의 질문·음성·파일 차이는 [호스트 연결](../../references/host-adapters.md)을 따른다. 도구는 연결된 서버가 제공하는 실제 이름과 스키마를 확인한 뒤 사용한다.
 
 ## 설계와 기존 설정
-[결과 설계](../post-call-result-design/SKILL.md)에 따라 필요한 필드와 완료 판정을 정한다. `get_agent`의 기존 postCall 설정과 연결 대상을 읽고 변경하지 않을 항목을 보존한다. 현재 지원하는 저장 대상과 필드 스키마를 확인한다.
+[결과 설계](../post-call-result-design/SKILL.md)에 따라 통화 중 필요한 상태·실행과 통화 후 추출·저장할 결과를 먼저 구분한다. 여기서는 현재 지원되는 postCall 설정과 저장 대상만 다룬다. `get_agent`의 기존 postCall 설정과 연결 대상을 읽고 변경하지 않을 항목을 보존하며, 현재 필드 스키마를 확인한다.
 
 ## 저장
 `save_agent`에 지원되는 postCall payload를 전달한다. 설정 그룹의 교체 의미에 따라 기존 필드를 포함한다. 고객·시트가 필요한 경우 `list_customer_attribute_definitions`/`get_customer_attribute_definition`, `list_customers`/`find_customer`, `list_sheets`/`get_sheet`로 현재 리소스를 먼저 읽고 실제 지원되는 연결만 사용한다. 고객 속성·정의는 `save_customer`/`save_customer_attribute_definition`으로 저장하며 `resolve_customer`는 없으면 고객을 만든다. 존재하지 않는 저장 대상이나 임의의 필드 타입을 만들지 않는다.
