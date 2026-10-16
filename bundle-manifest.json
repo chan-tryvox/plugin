@@ -1,12 +1,12 @@
 {
   "version": "0.2.17",
   "skills_count": 26,
-  "sha256": "43229b011c3ab867164a98a81f853b6b18bff16708b15ed198ce37d36e2e9bdf",
+  "sha256": "3208e32fb6707353d4842f9367df881cac152172ca5c2ac474a9a772e5b83077",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
   "files": {
-    "references/call-baseline.md": "781a8f325ed8f95ee3f7c41d120db5a56b029b4c8082ca723da16d57b524e09d",
+    "references/call-baseline.md": "d8ed0f57d5228968de05786be8614df738023034d52096dc88f0ac4a19004aea",
     "references/decision-slots.json": "28619fd1068b42f70d9a12f3a6dbb4e3756d3d99231f9b0e3dcf8cc3636c1570",
     "references/execution-contract.md": "8e974c2b05c860191d2f20163fe025f808b591eaa7b4e4e25edff1caebd47a48",
     "references/flow-ars-pattern.md": "6032c524ef92a456a17a82ed087df85e0316ce4f411acde9670a0bbd5e90b15c",
