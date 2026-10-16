@@ -1,12 +1,12 @@
 {
   "version": "0.2.17",
   "skills_count": 26,
-  "sha256": "3208e32fb6707353d4842f9367df881cac152172ca5c2ac474a9a772e5b83077",
+  "sha256": "7137192c63e321d5b8221379da1e8ca916aff8e6782eef7ab9fce2cbb8145959",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
   "files": {
-    "references/call-baseline.md": "d8ed0f57d5228968de05786be8614df738023034d52096dc88f0ac4a19004aea",
+    "references/call-baseline.md": "0978498e27450b6130fca3523740b9b79e7d6729068f38e2b06479085fc157b6",
     "references/decision-slots.json": "28619fd1068b42f70d9a12f3a6dbb4e3756d3d99231f9b0e3dcf8cc3636c1570",
     "references/execution-contract.md": "8e974c2b05c860191d2f20163fe025f808b591eaa7b4e4e25edff1caebd47a48",
     "references/flow-ars-pattern.md": "6032c524ef92a456a17a82ed087df85e0316ce4f411acde9670a0bbd5e90b15c",
@@ -91,7 +91,7 @@
     "skills/explore-agent-context/SKILL.md": "774d244c36cba2ed9146f7c64ee42bb520fcb8a28fedc681cae8386569aca5de",
     "skills/inspect-call-evidence/SKILL.md": "8222963ca4d7d51a6e40aa649c964b7bd27228080b6c63d80ac031191a6f0189",
     "skills/knowledge-grounding/SKILL.md": "193b52d2cd06ecfad4d9cf9f1d93ec845d202303d9c33057475e01600017e099",
-    "skills/manual-authoring/SKILL.md": "84af3e3ba910b04c73355b5a8bd4092174a7345a72000d557c9a75001c985782",
+    "skills/manual-authoring/SKILL.md": "bec7cfe546f931b205064b4acbab30db8b58c63af98ab97bccdc5ae2f1add3ea",
     "skills/operate-outbound-and-followup/SKILL.md": "03193756194f281761d6101499e6152063afff31e710d35d20b8977a65286d05",
     "skills/post-call-result-design/SKILL.md": "0648db9d8d8ebcd87a6443e7ab36080fae5e687abb20752fe3c7051b807ccf4d",
     "skills/prepare-voice-test/SKILL.md": "2342e7fc767f4d422b2f52652c4d632497b47b5c197753d27cfc3c201dc505b8",
