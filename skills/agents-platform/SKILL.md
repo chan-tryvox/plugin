@@ -42,12 +42,6 @@ metadata:
 
 실제 전화·대량 발신·운영 반영·번호 연결 변경·삭제·인증 변경은 [실행 계약](../../references/execution-contract.md)의 ‘실제 영향이 있는 도구’(사용자 확인, `execution_key`, 결과 불명, 비밀값 마스킹)를 따른다. agent 저장이나 게시가 실고객 발신을 허가하지 않는다.
 
-## Context와 기록
-
-다음 작업에 영향을 줄 결정, 고객 피드백, 확인된 제품 변경, 미완료 다음 단계가 생기면 get_work_context와 get_work_record로 관련 case를 확인하고 save_work_record로 필요한 요약을 기록한다. “기억해” 같은 키워드를 요구하지 않는다. get_work_context의 background_settings로 자동 기록 상태와 revision/epoch를 확인하고 routine case/event에 최신 값을 전달한다. 기본은 켜짐이며 OFF이면 routine 자동 기록을 중단한다. 사용자가 명시적으로 요청한 기존 기록 조회·정정·삭제는 OFF와 별개로 지원한다. 사용자가 현재 대화에서 저장하지 말라고 직접 요청하면 기록하지 않는다. 외부 통화 transcript 전체를 수집하지 않고 간결한 보고와 최소 locator만 남긴다. 고객 음성 결과는 reported evidence로 유지하며 text_contract 평가를 고객 voice 결과로 표시하지 않는다.
-
-user-principal save_agent 또는 save_manual을 호출하기 직전에 매번 get_work_context를 실행하고, 결과의 context_receipt.token을 다음 한 번의 저장에 최상위 context_receipt로 전달한다. receipt를 재사용하지 않는다. 이 읽기는 max_tokens를 기본값(3000) 아래로 낮추지 않고, `MEMORY_CONTEXT_BUDGET_TOO_SMALL`이 오면 `details.required_tokens` 이상(최대 3000)으로 한 번만 다시 호출한다. 실제 도구 목록에 get_work_context가 없는 호스트(외부 공개 연결 등)에서는 receipt 없이 저장을 시도할 수 있고, 서버가 receipt를 요구하며 거부하면 초안만 준비하고 그 사실을 알린다. 작업 기록 도구가 없으면 현재 대화나 사용자 handoff로 이어간다.
-
 ## 응답과 복귀
 저장/접수/최종 완료/부분 실패/불명을 분리한다. 저장 성공 뒤 조회가 실패했다면 받은 `agent_id`와 `manual_id`부터 이어간다. `409` conflict는 현재 상태를 다시 읽고 사용자의 변경 의도를 다시 적용할 때만 처리하며 무조건 재시도하지 않는다. 쓰기 응답이 불명이면 새 생성이나 같은 쓰기를 반복하지 말고 [resume-agent-work](../resume-agent-work/SKILL.md)로 지원되는 조회를 이어간다. OAuth 만료를 조직 전체 키나 직접 REST로 우회하지 않는다.
 

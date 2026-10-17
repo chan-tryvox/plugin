@@ -31,4 +31,4 @@ metadata:
 
 ## 피드백을 다음 작업으로 바꾸기
 
-[업무 판단 기준](../../references/workflow-guidance.md)의 피드백 표로 원고·연결·결과 저장·시험 조건 중 변경할 범위를 좁힌다. “대시보드 우선” 결정은 전달 위치와 결과 설정의 변경일 수 있으며 모든 외부 도구를 제거하라는 뜻은 아니다. [합성 고객 여정](../../references/workflow-examples.md)에 저장·고객 시험·재개 예가 있다. 현재 목표·사용자 결정·확인한 근거·변경한 대상·다음 시험이 이후 작업에 필요하면 save_work_record로 간결히 갱신한다. 고객 음성 결과는 feedback_reported 또는 evaluation_reported의 customer_voice_report로 기록해 계속 고객 보고로 표시한다. 전체 외부 transcript는 수집하지 않는다. routine record 저장은 get_work_context가 제공하는 자동 기록 enabled/revision/epoch로 게이트되며 OFF 또는 CAS 거부 시 자동 기록을 중단한다. 사용자가 현재 대화에서 저장하지 말라고 직접 요청하면 기록하지 않는다. OFF와 별개로 사용자가 명시적으로 요청한 기존 기록 조회·정정·삭제는 지원한다. text_contract 평가를 고객 음성 시험으로 표현하지 않는다. 이미 저장한 제품 리소스는 재사용한다. 마지막 단계로 사용자가 이번 요청에서 앞으로도 지킬 규칙·결정을 말했다면(예: "앞으로", "항상", "다음에도") 저장 후 `save_work_record`의 `decision_set`으로 짧게 기록한다(자동 기록이 OFF이거나 사용자가 기록하지 말라고 했으면 제외).
+[업무 판단 기준](../../references/workflow-guidance.md)의 피드백 표로 원고·연결·결과 저장·시험 조건 중 변경할 범위를 좁힌다. “대시보드 우선” 결정은 전달 위치와 결과 설정의 변경일 수 있으며 모든 외부 도구를 제거하라는 뜻은 아니다. [합성 고객 여정](../../references/workflow-examples.md)에 저장·고객 시험·재개 예가 있다. 고객 음성 결과는 계속 고객 보고로 표시한다. text_contract 평가를 고객 음성 시험으로 표현하지 않는다. 이미 저장한 제품 리소스는 재사용한다.

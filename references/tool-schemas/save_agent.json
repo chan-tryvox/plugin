@@ -23,7 +23,7 @@
         "type": "string",
         "minLength": 43,
         "maxLength": 128,
-        "description": "Required only when the get_work_context tool is available to you (embedded Copilot): copy the token from the recent get_work_context result context_receipt.token. MCP checks current context before dispatch and never sends this value to the product API. When get_work_context is not offered to you (external hosts) or you use an organization API key, omit it; the CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
+        "description": "No longer used: accepted for compatibility and ignored. It is never validated and never sent to the product API, so omit it. The CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
       }
     },
     "required": [
@@ -46,7 +46,7 @@
             "type": "string",
             "minLength": 43,
             "maxLength": 128,
-            "description": "Required only when the get_work_context tool is available to you (embedded Copilot): copy the token from the recent get_work_context result context_receipt.token. MCP checks current context before dispatch and never sends this value to the product API. When get_work_context is not offered to you (external hosts) or you use an organization API key, omit it; the CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
+            "description": "No longer used: accepted for compatibility and ignored. It is never validated and never sent to the product API, so omit it. The CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
           }
         },
         "required": [
@@ -75,7 +75,7 @@
             "type": "string",
             "minLength": 43,
             "maxLength": 128,
-            "description": "Required only when the get_work_context tool is available to you (embedded Copilot): copy the token from the recent get_work_context result context_receipt.token. MCP checks current context before dispatch and never sends this value to the product API. When get_work_context is not offered to you (external hosts) or you use an organization API key, omit it; the CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
+            "description": "No longer used: accepted for compatibility and ignored. It is never validated and never sent to the product API, so omit it. The CAS revision in payload.expected_head_revision is always required and a stale revision is rejected by the product API (409)."
           }
         },
         "required": [

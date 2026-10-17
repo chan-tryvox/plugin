@@ -12,7 +12,7 @@ metadata:
 제품 호출에는 [공통 실행 계약](../../references/execution-contract.md)을 적용한다. 내장/외부의 질문·음성·파일 차이는 [호스트 연결](../../references/host-adapters.md)을 따른다. 도구는 연결된 서버가 제공하는 실제 이름과 스키마를 확인한 뒤 사용한다. 현재 저장·재개 capability는 [워크플로 capability 표](../../references/workflow-capabilities.json)와 [합성 고객 여정](../../references/workflow-examples.md)에 있다.
 
 ## 복귀 자료
-현재 연결 조직·주체를 확인하고 먼저 get_work_context로 관련 결정·열린 작업을 찾은 뒤 get_work_record에서 기존 case와 version을 확인한다. 실제 도구 목록과 schema에 shared-work 도구가 있으면 해당 case로 재개하고 필요한 결정·피드백을 짧게 기록한다. get_work_context의 background_settings에서 기본 켜짐 상태와 revision/epoch를 확인한다. OFF이면 자동 기록을 중지하되 사용자가 명시적으로 요청한 기존 기록 조회·정정·삭제는 계속 지원한다. `source_retracted`·`delete_source`·`delete_case`는 선택한 기록 하나가 아니라 같은 출처에서 나온 사용자의 모든 case 기록을 함께 지운다. 중복 기억 중 하나만 지우거나 기억 하나만 철회할 때는 `claim_withdrawn`(claim_id, reason, 중복이면 duplicate_of_claim_id)을 쓴다. 출처 자체를 지워 달라는 요청일 때만 source/case 삭제를 쓰고, 실행 전에 함께 지워지는 다른 기록을 알린다. 사용자가 기존 결정과 다른 새 지시를 분명히 하면 되묻지 말고 `claim_corrected`로 기존 결정을 정정해 기록한다. 되묻는 것은 지시가 모호할 때뿐이다. routine save가 settings CAS로 거부되면 재시도 전에 최신 설정을 다시 읽는다. 사용자가 현재 대화에서 기록하지 말라고 하면 쓰지 않는다. 도구가 없을 때는 현재 호스트의 접근 가능한 대화나 사용자가 제공한 handoff로 이어간다. `pending_recent_inputs`는 같은 사용자의 아직 정리 전 최근 입력이므로 참고만 하고 확정 기억처럼 단정하지 않으며 필요하면 사용자에게 확인한다. guidance의 `current_agent_revision`이 `evaluated_agent_revision`보다 크면 평가 이후 agent가 바뀐 것이니 현재 agent를 다시 읽고 guidance를 절차로만 적용한다. `evaluation_reported.register_holdout`은 사용자가 현재 임베디드 Copilot 대화에서 직접 입력한 독립 사례(요청 변경·기대 결과·보존 조건)를 같은 턴에서 처리되기 전에 get_work_context의 pending_recent_inputs 해당 항목에서 그대로 복사한 source_thread_id(→source.source_thread_id)·source_id(→source.source_message_id)와 함께 명시적 경로로 보낼 때만 등록한다. 시나리오는 JSON 문자열을 손으로 만들지 않고 `payload.payload.holdout_scenario`(`base_configuration`, `requested_change`, `required_preservation` 1~6개 문자열)로 보낸다. MCP가 정규 `scenario` 문자열을 만들며 예전 `scenario` 문자열과 함께 보내지 않는다. `required_preservation`·`required_additions`는 설명이 아니라 `base_configuration`·`requested_change`에서 글자 그대로 복사한 문구여야 하고 `expected_result`는 채점되지 않는다. 요청이 언급하지 않은 곳까지 반영해야 하면 `required_additions`(요청문에 있고 base에 없는 문구 1~4개)와 `retired_literals`(base에 있고 사라져야 할 문구 0~4개)를 함께 보낸다. 예: base의 [프롬프트]와 [매뉴얼] 줄에 같은 `오후 7시`가 있고 요청이 프롬프트만 언급하면 `required_additions:["오후 8시"]`, `retired_literals:["오후 7시"]`로 두어 양쪽 반영을 확인한다. holdout 등록 가능 여부는 호스트 이름(Codex, Claude 등)으로 판단하지 않는다. 결론을 내리기 전에 반드시 `get_work_context(agent_id)`를 먼저 호출한다. `pending_recent_inputs`에 지금 사용자 메시지에 해당하는 항목이 `source_thread_id`와 함께 있으면 그 `source_thread_id`·`source_id`로 등록한다(`source_host`는 `embedded`). 해당 항목이 없으면 등록할 수 없다고 안내한다. 모델이 만든 사례나 추측한 ID로 등록하지 않는다.
+현재 연결 조직·주체를 확인하고 현재 호스트의 접근 가능한 대화나 사용자가 제공한 handoff로 이어간다.
 
 ## 상태별 다음 행동
 | 상태 | 행동 |
@@ -20,15 +20,14 @@ metadata:
 | Manual 저장 성공, 후속 단계 실패 | 받은 `agent_id`와 `manual_id`로 Manual을 조회하고 그 Single에서 이어간다 |
 | 저장 성공, 재조회 실패 | 같은 `agent_id`·`manual_id`를 재조회; 새 리소스 생성 금지 |
 | Manual create 응답 불명 | 같은 `agent_id`에서 `list_manuals`로 후보를 찾고 `get_manual`로 ID·전체 본문·revision을 비교한다; 일치 후보는 현재 대상으로 사용할 수 있지만 exact receipt 없이는 원 create 성공으로 단정하지 않는다 |
-| save_work_record 응답 불명 | 동일 UUID operation_id로 get_work_operation을 조회; POST를 반복하거나 새 ID를 만들지 않음 |
 | 발신·캠페인 응답 불명(`EXECUTION_RESULT_UNKNOWN`·`EXECUTION_IN_PROGRESS`) | 재실행·새 `execution_key` 금지; `list_calls`(`call_to`·`start_at_after`)/`get_call`, 캠페인은 `get_campaign`/`list_campaigns`로 접수 여부 확인 후 보고 |
 | 게시·번호 연결·지식 삭제 등 제품 작업 응답 불명 | `get_agent`/`list_agent_versions`, `get_number`, `list_knowledge_documents`로 실제 상태를 읽고 재실행하지 않음; 조회 도구가 없으면 사용자에게 상태 확인을 요청 |
 | 인증 만료/철회 | 호스트의 재연결 경로로 권한 복구 후 실제 상태 재조회 |
 | 다른 조직으로 바뀜(`set_organization` 전환 포함) | 이전 조직 자격 증명/리소스·ID·revision을 재사용하지 않고 `get_organization`으로 현재 조직을 확인한 뒤 필요한 리소스를 다시 조회; 의도하지 않은 전환이면 사용자에게 알리고 대상 조직을 확인받는다 |
 
-제품이나 작업 기록의 unknown 결과를 임의로 재실행하지 않는다. save_work_record는 처음 사용한 UUID operation_id로 get_work_operation을 조회해 영수증을 확인한다. 새 operation ID, POST 재시도, 직접 API 우회를 하지 않는다.
+제품의 unknown 결과를 임의로 재실행하지 않는다. 새 operation ID, POST 재시도, 직접 API 우회를 하지 않는다.
 
 ## 결과
 지금까지 확인된 완료, 미확인 동작, 현재 막힌 이유, 가능한 다음 조회/사용자 행동을 구분한다. 콜이 이미 접수됐으면 연결을 끊거나 대화를 취소해도 전화가 자동 취소된다고 말하지 않는다. 파일·모델 요약은 제품 상태의 정본이 아니다.
 
-복귀 시 [업무 판단 기준](../../references/workflow-guidance.md)의 작은 업무 요약과 get_work_context/get_work_record 결과에서 목표·사용자 결정·완료 참조·다음 행동을 읽는다. shared-work 도구가 없을 때 새 Thread나 호스트에서 그 요약에 접근할 수 없다면 사용자에게 최신 ID와 결정 요약을 요청한다. 모델 요약만으로 실행 권한이나 제품 상태를 확정하지 않는다. delivery.reference는 원문 읽기를, delivery.unavailable은 알려진 결과 조회를 이어간다. 새 환경이 생겨도 이미 시도한 제품 쓰기를 다시 실행하지 않는다. handoff 예는 [합성 고객 여정](../../references/workflow-examples.md)에 있다.
+복귀 시 [업무 판단 기준](../../references/workflow-guidance.md)의 작은 업무 요약과 사용자가 제공한 handoff에서 목표·사용자 결정·완료 참조·다음 행동을 읽는다. 새 Thread나 호스트에서 그 요약에 접근할 수 없다면 사용자에게 최신 ID와 결정 요약을 요청한다. 모델 요약만으로 실행 권한이나 제품 상태를 확정하지 않는다. delivery.reference는 원문 읽기를, delivery.unavailable은 알려진 결과 조회를 이어간다. 새 환경이 생겨도 이미 시도한 제품 쓰기를 다시 실행하지 않는다. handoff 예는 [합성 고객 여정](../../references/workflow-examples.md)에 있다.

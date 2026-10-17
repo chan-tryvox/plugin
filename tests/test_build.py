@@ -205,9 +205,9 @@ class BuildTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, 'unclassified designed-only tools'):
             self.run_build()
 
-    def test_designed_work_tools_cannot_be_hard_required(self):
+    def test_designed_tools_cannot_be_hard_required(self):
         self.change_json('references/workflow-capabilities.json', lambda c:
-                         c['workflows'][0]['designed']['required_tools'].append('get_work_context'))
+                         c['workflows'][0]['designed']['required_tools'].append('open_voice_test_session'))
         with self.assertRaisesRegex(ValueError, 'Designed tools cannot be hard-required'):
             self.run_build()
 
