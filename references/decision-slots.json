@@ -33,7 +33,7 @@
   "list_columns":{"kind":"semi","means":"올릴 명단에 있는 칸","from":["sheet","request"],"affects":["presetDynamicVariables","prompt.firstLine"],"choices":"sheet_vars"},
   "success":{"kind":"semi","means":"통화가 잘되면 남아야 하는 것","from":["request"],"affects":["postCall","builtInTools.end_call"],"choices":"outcome_sets"},
   "number_source":{"kind":"value","means":"번호를 어떻게 알았냐는 물음에 할 답","from":["request"],"affects":["manuals"],"choices":"number_source","never_invent":true},
-  "persuasion":{"kind":"semi","means":"관심 없다고 하면 몇 번 더 권하는가","affects":["manuals"],"choices":"not_interested","default":"한 번만 짧게 다시 권유"},
+  "persuasion":{"kind":"semi","means":"관심 없다고 하면 몇 번 더 권하는가","affects":["manuals"],"choices":"not_interested","default":"바로 정중히 마무리"},
   "script_mode":{"kind":"structure","means":"그대로 말해야 하는 멘트가 있는가","from":["source"],"affects":["agent_type","manuals"],"choices":"script_mode"},
   "identity":{"kind":"semi","means":"본인 확인 방법. 계약 확인·수납·동의 수집은 켜고 행사 안내는 끈다","affects":["manuals"],"choices":"identity"},
   "callback":{"kind":"semi","means":"지금 바쁘다고 하면 재통화 시간 받기","affects":["manuals","postCall"],"choices":"callback"},
