@@ -95,6 +95,12 @@ class DecisionSlotsGuidanceTests(unittest.TestCase):
             with self.subTest(path=path):
                 self.assertIsNone(re.search(r'빈 preset|empty preset', read(path)))
 
+    def test_persuasion_default_is_to_close_politely_without_re_asking(self):
+        data = json.loads(read('references/decision-slots.json'))
+        self.assertEqual(data['slots']['persuasion']['default'], '바로 정중히 마무리')
+        self.assertEqual(data['choices']['not_interested'][0], data['slots']['persuasion']['default'])
+        self.assertIn('정하지 않았으면 다시 권하지 않고', read('references/call-baseline.md'))
+
     def test_build_first_names_decision_section_and_value_rule(self):
         text = read('skills/build-first-voice-agent/SKILL.md')
         self.assertIn('## 정할 것', text)
