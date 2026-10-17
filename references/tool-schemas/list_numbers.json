@@ -14,9 +14,14 @@
           },
           "status": {
             "type": "string",
-            "description": "Status filter. Repeat the query parameter to filter by multiple statuses when the endpoint supports multiple values.",
+            "description": "For kind=general, pass one ownership status: active, cancel_requested, or all.",
             "default": "active",
-            "title": "Status"
+            "title": "Status",
+            "enum": [
+              "active",
+              "cancel_requested",
+              "all"
+            ]
           },
           "cursor": {
             "type": "string",
@@ -64,7 +69,7 @@
           "status": {
             "$ref": "#/$defs/UanTelephoneStatus",
             "title": "Status",
-            "description": "Status filter. Repeat the query parameter to filter by multiple statuses when the endpoint supports multiple values."
+            "description": "For kind=uan, pass one main-number status: provisioning, active, cancel_requested, or expired."
           },
           "cursor": {
             "type": "string",
@@ -102,7 +107,7 @@
               ],
               "type": "string"
             },
-            "description": "Status filter. Repeat the query parameter to filter by multiple statuses when the endpoint supports multiple values.",
+            "description": "For kind=presentation, pass an array of caller-ID registration statuses: pending, approved, rejected.",
             "title": "Status"
           },
           "cursor": {

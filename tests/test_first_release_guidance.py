@@ -139,31 +139,17 @@ class FirstReleaseGuidanceTests(unittest.TestCase):
         self.assertEqual(
             workflows["connect_phone"]["implemented"]["required_tools"],
             ["get_number", "list_numbers", "set_number_agents"])
-        # The voice test stays a customer action, and work-record tools are never hard requirements.
+        # The voice test stays a customer action.
         self.assertTrue(any("customer performs the voice test" in a
                             for a in workflows["customer_direct_test"]["host_actions"]))
-        work = {"get_work_context", "get_work_operation", "get_work_record", "save_work_record"}
-        for workflow in workflows.values():
-            self.assertFalse(work & set(workflow["implemented"]["required_tools"]), workflow["id"])
 
-    def test_work_record_tools_may_be_absent_on_external_hosts(self):
-        for path in ("references/host-adapters.md", "references/execution-contract.md", "DEVELOPMENT.md"):
-            text = read(path)
-            self.assertIn("작업 기록", text, path)
-        adapters = read("references/host-adapters.md")
-        self.assertIn("외부 공개 연결에는 작업 기록 4개 도구가 없을 수 있다", adapters)
-        self.assertIn("사용자 handoff", adapters)
-        contract = read("references/execution-contract.md")
-        self.assertIn("작업 기록 도구가 없으면 현재 대화나 사용자 handoff로 이어간다", contract)
-
-    def test_snapshot_covers_public_tools_native_org_tools_and_work_records_only(self):
+    def test_snapshot_covers_public_tools_and_native_org_tools_only(self):
         snapshot = json.loads(read("references/implemented-tools.snapshot.json"))
         implemented = set(snapshot["implemented_tools"])
         self.assertEqual(snapshot["native_tools"], ["list_organizations", "set_organization"])
-        self.assertEqual(snapshot["public_excluded"],
-                         ["get_work_context", "get_work_operation", "get_work_record", "save_work_record"])
+        self.assertEqual(snapshot["public_excluded"], [])
         self.assertTrue({"validate_flow", "create_voice_model", *snapshot["native_tools"]} <= implemented)
-        self.assertEqual(len(implemented), 58)
+        self.assertEqual(len(implemented), 54)
         for skill in json.loads(read("catalog.json"))["skills"]:
             self.assertTrue(set(skill["tools"]["implemented"]) <= implemented, skill["name"])
 

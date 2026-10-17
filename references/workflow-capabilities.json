@@ -19,9 +19,6 @@
           "get_organization",
           "get_schema",
           "get_tool",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "import_knowledge_documents",
           "instantiate_agent_template",
           "list_agent_templates",
@@ -35,7 +32,6 @@
           "list_schemas",
           "list_tools",
           "save_tool",
-          "save_work_record",
           "set_organization",
           "update_organization",
           "validate_flow"
@@ -55,7 +51,7 @@
         "create_voice_model registers only a voice the speaker has consented to; the assistant confirms consent and the source (public HTTPS audio, up to 6MB) in the conversation first.",
         "Before set_organization the assistant confirms the target organization with the user, because the switch applies to the whole connection."
       ],
-      "designed_unavailable_fallback": "If get_work_context or its receipt is unavailable (external public connections may not expose work-record tools), try the save without a receipt; if the server requires it and rejects, prepare the draft and explain. Keep continuity in the current accessible conversation or a user-provided handoff."
+      "designed_unavailable_fallback": "Keep continuity in the current accessible conversation or a user-provided handoff."
     },
     {
       "id": "refinement",
@@ -69,17 +65,13 @@
           "create_knowledge",
           "get_schema",
           "get_tool",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
           "list_knowledge_documents",
           "list_knowledges",
           "list_manuals",
           "list_tools",
           "save_agent",
-          "save_tool",
-          "save_work_record"
+          "save_tool"
         ]
       },
       "designed": {
@@ -87,7 +79,7 @@
         "optional_tools": []
       },
       "host_actions": [],
-      "designed_unavailable_fallback": "Re-read current product state before editing. If get_work_context or its receipt is unavailable, try the save without a receipt; if the server requires it and rejects, prepare a draft."
+      "designed_unavailable_fallback": "Re-read current product state before editing."
     },
     {
       "id": "publish",
@@ -145,12 +137,8 @@
           "get_agent",
           "get_call",
           "get_manual",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
-          "list_calls",
-          "save_work_record"
+          "list_calls"
         ]
       },
       "designed": {
@@ -161,7 +149,7 @@
         "The customer performs the voice test in the product UI; no tool starts a voice test.",
         "The customer reports the observed result and any relevant call reference."
       ],
-      "designed_unavailable_fallback": "Keep customer test feedback labeled as reported until get_call reads the call. If shared record tools are unavailable (external public connections may not expose them) or the user directly asks not to save, retain only the current accessible conversation; never imply MCP launched the test."
+      "designed_unavailable_fallback": "Keep customer test feedback labeled as reported until get_call reads the call; never imply MCP launched the test."
     },
     {
       "id": "operate",
@@ -176,9 +164,6 @@
           "get_customer",
           "get_number",
           "get_sheet",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "launch_campaign",
           "list_calls",
           "list_campaigns",
@@ -187,8 +172,7 @@
           "list_sheets",
           "pause_campaign",
           "place_call",
-          "resume_campaign",
-          "save_work_record"
+          "resume_campaign"
         ]
       },
       "designed": {
@@ -220,17 +204,13 @@
           "get_campaign",
           "get_customer",
           "get_customer_attribute_definition",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
           "list_campaigns",
           "list_customer_attribute_definitions",
           "list_customers",
           "resolve_customer",
           "save_customer",
-          "save_customer_attribute_definition",
-          "save_work_record"
+          "save_customer_attribute_definition"
         ]
       },
       "designed": {
@@ -254,16 +234,12 @@
           "get_campaign",
           "get_number",
           "get_organization",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
           "list_agents",
           "list_calls",
           "list_knowledge_documents",
           "list_manuals",
           "list_organizations",
-          "save_work_record",
           "set_organization"
         ]
       },
@@ -272,10 +248,10 @@
         "optional_tools": []
       },
       "host_actions": [
-        "When shared-work tools are unavailable and the host cannot access the original conversation, the user provides prior resource IDs and the latest decision."
+        "When the host cannot access the original conversation, the user provides prior resource IDs and the latest decision."
       ],
       "designed_unavailable_fallback": "Resume from same-host history or a user-provided handoff, then verify supplied IDs and current revisions. Never infer that another thread or host was searched. After an unknown execution, look up state with the read tools instead of re-running."
     }
   ],
-  "scope_note": "The bundle documents the first-release tool schema candidates plus work context/record tools. This does not prove a connected host exposes them; external public connections may not expose the work-record tools. Inspect the live tool list and schemas."
+  "scope_note": "The bundle documents the first-release tool schema candidates. This does not prove a connected host exposes them. Inspect the live tool list and schemas."
 }

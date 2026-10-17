@@ -2,8 +2,8 @@
   "snapshot_date": "2026-10-01",
   "scope": "Local MCP source contract candidate. The source worktree state is recorded below; this is not a deployed-server inventory. A connected host may expose fewer tools or permissions; inspect its live tools and schemas before acting.",
   "source": {
-    "mcp_commit": "32394ee1aa9b7df5d0591a9c4ded4c7e7e364fa0",
-    "manifest_sha256": "e23b48b1659ff5806afac4564ffc8f99f1ca116f0d1ca65e8f5ba6ec69735e85",
+    "mcp_commit": "d49cfbfefb7723bafbfe1f0fab9127664d5f62b1",
+    "manifest_sha256": "cc909909622c8f31deeb409a42306cd57c16d11cb52fb4394550c8fba6fda650",
     "source_manifest_sha256": "f7c583c38b19d9d910233c285f012783acb840f0aa027dd9821e42d919224c3c",
     "source_state": "clean_commit",
     "dirty_contracts": []
@@ -12,12 +12,7 @@
     "list_organizations",
     "set_organization"
   ],
-  "public_excluded": [
-    "get_work_context",
-    "get_work_operation",
-    "get_work_record",
-    "save_work_record"
-  ],
+  "public_excluded": [],
   "implemented_tools": [
     "cancel_campaign",
     "create_agent_version",
@@ -38,9 +33,6 @@
     "get_schema",
     "get_sheet",
     "get_tool",
-    "get_work_context",
-    "get_work_operation",
-    "get_work_record",
     "import_knowledge_documents",
     "instantiate_agent_template",
     "launch_campaign",
@@ -71,7 +63,6 @@
     "save_customer_attribute_definition",
     "save_manual",
     "save_tool",
-    "save_work_record",
     "set_number_agents",
     "set_organization",
     "update_number",
@@ -155,18 +146,6 @@
       "path": "tool-schemas/get_tool.json",
       "sha256": "61d37e0459ca47bcc42876205d5e2bded5afb0b48756e0cabded8801b78f8fc6"
     },
-    "get_work_context": {
-      "path": "tool-schemas/get_work_context.json",
-      "sha256": "d77dee09c2daf09cf2c325170f0c15d4bb229047617a80c93429aee58ca9282c"
-    },
-    "get_work_operation": {
-      "path": "tool-schemas/get_work_operation.json",
-      "sha256": "8c2574ce37d138a76d5659f69012a8e95affc2b2ee8345e986f6b364ad6ba878"
-    },
-    "get_work_record": {
-      "path": "tool-schemas/get_work_record.json",
-      "sha256": "270097691ac49ef4422ef5167e1b7e02fd1f555a9c540d028858da4abae5e38e"
-    },
     "import_knowledge_documents": {
       "path": "tool-schemas/import_knowledge_documents.json",
       "sha256": "5feea33c832ab8e98e2eb6c033bff55e01b512b7c496f593efe0e8d8b62e10e4"
@@ -225,7 +204,7 @@
     },
     "list_numbers": {
       "path": "tool-schemas/list_numbers.json",
-      "sha256": "0e8723b00547b2b88754968df6ea0c4a251b01fd6bf6f78baa28251848ef5a05"
+      "sha256": "fd70a337fb9834c7c6cc73207f1f5045ae8f762b7c3c2ac6079de532afb29dab"
     },
     "list_organization_members": {
       "path": "tool-schemas/list_organization_members.json",
@@ -269,7 +248,7 @@
     },
     "save_agent": {
       "path": "tool-schemas/save_agent.json",
-      "sha256": "4ebf70e56de7c1cb0ac9703d3dd825a2d1219cdb3df03d4c01b75249af6450f8"
+      "sha256": "f1d26cd95eb39629a843b7b422a79dc294a3c1498a8ae1681203d820f92befa0"
     },
     "save_customer": {
       "path": "tool-schemas/save_customer.json",
@@ -281,15 +260,11 @@
     },
     "save_manual": {
       "path": "tool-schemas/save_manual.json",
-      "sha256": "232a87e7ea699bcfc72f70bdf08a7b3cb8e6d116892d354758eb45ed8e98b540"
+      "sha256": "a7f6a4b9dcc7693f8626ff539f9e3e0c5e7d533da8c96de7632f08aedfeb0acf"
     },
     "save_tool": {
       "path": "tool-schemas/save_tool.json",
       "sha256": "eed63880366b141980f680e70057a6e48b843cd75ffdf8b143af211e302df74d"
-    },
-    "save_work_record": {
-      "path": "tool-schemas/save_work_record.json",
-      "sha256": "544faa21b382935b23931fc64d6267d6db9f0dee1b1ebd3642d74545739a25c6"
     },
     "set_number_agents": {
       "path": "tool-schemas/set_number_agents.json",

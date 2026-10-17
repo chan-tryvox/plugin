@@ -115,9 +115,6 @@
           "get_schema",
           "get_sheet",
           "get_tool",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "import_knowledge_documents",
           "instantiate_agent_template",
           "launch_campaign",
@@ -146,7 +143,6 @@
           "save_customer",
           "save_manual",
           "save_tool",
-          "save_work_record",
           "set_number_agents",
           "set_organization",
           "update_number",
@@ -190,9 +186,6 @@
           "get_manual",
           "get_number",
           "get_tool",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agents",
           "list_knowledge_documents",
           "list_knowledges",
@@ -200,8 +193,7 @@
           "list_numbers",
           "list_tools",
           "save_agent",
-          "save_manual",
-          "save_work_record"
+          "save_manual"
         ],
         "designed_only": []
       }
@@ -215,10 +207,8 @@
         "implemented": [
           "get_agent",
           "get_manual",
-          "get_work_context",
           "save_agent",
-          "save_manual",
-          "save_work_record"
+          "save_manual"
         ],
         "designed_only": []
       }
@@ -236,7 +226,6 @@
           "get_customer",
           "get_customer_attribute_definition",
           "get_sheet",
-          "get_work_context",
           "list_customer_attribute_definitions",
           "list_customers",
           "list_sheets",
@@ -259,7 +248,6 @@
           "get_call",
           "get_manual",
           "get_tool",
-          "get_work_context",
           "list_tools",
           "save_agent",
           "save_manual",
@@ -295,10 +283,8 @@
           "get_agent",
           "get_call",
           "get_schema",
-          "get_work_context",
           "list_models",
-          "save_agent",
-          "save_work_record"
+          "save_agent"
         ],
         "designed_only": []
       }
@@ -313,13 +299,9 @@
           "get_agent",
           "get_call",
           "get_manual",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
           "list_calls",
-          "list_manuals",
-          "save_work_record"
+          "list_manuals"
         ],
         "designed_only": []
       }
@@ -354,16 +336,12 @@
           "get_manual",
           "get_number",
           "get_organization",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_agent_versions",
           "list_calls",
           "list_campaigns",
           "list_knowledge_documents",
           "list_manuals",
           "list_organizations",
-          "save_work_record",
           "set_organization"
         ],
         "designed_only": []
@@ -381,9 +359,6 @@
           "get_agent_template",
           "get_manual",
           "get_schema",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "instantiate_agent_template",
           "list_agent_templates",
           "list_agent_versions",
@@ -392,8 +367,7 @@
           "list_models",
           "publish_agent_version",
           "save_agent",
-          "save_manual",
-          "save_work_record"
+          "save_manual"
         ],
         "designed_only": []
       }
@@ -409,14 +383,10 @@
           "get_agent",
           "get_call",
           "get_manual",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "list_calls",
           "publish_agent_version",
           "save_agent",
-          "save_manual",
-          "save_work_record"
+          "save_manual"
         ],
         "designed_only": []
       }
@@ -457,9 +427,6 @@
           "get_number",
           "get_organization",
           "get_sheet",
-          "get_work_context",
-          "get_work_operation",
-          "get_work_record",
           "launch_campaign",
           "list_calls",
           "list_campaigns",
@@ -468,8 +435,7 @@
           "pause_campaign",
           "place_call",
           "resolve_customer",
-          "resume_campaign",
-          "save_work_record"
+          "resume_campaign"
         ],
         "designed_only": []
       }

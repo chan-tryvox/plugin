@@ -1,6 +1,6 @@
 # 합성 고객 여정: 만들기, 다듬기, 직접 시험, 운영, 재개
 
-이 예시는 합성 자료와 도구 호출 형식을 보여준다. 실제 요청 전에 연결된 호스트의 실제 도구와 schema를 확인한다. 번들의 도구 schema 후보는 실제 사용 가능 여부를 연결된 서버에서 확인한다. user-principal save_agent/save_manual에는 직전 get_work_context에서 받은 context receipt가 필요하다. 외부 공개 연결처럼 작업 기록 도구가 없는 호스트에서는 receipt 없이 저장을 시도하고 서버가 거부하면 초안과 빠진 capability를 안내한다.
+이 예시는 합성 자료와 도구 호출 형식을 보여준다. 실제 요청 전에 연결된 호스트의 실제 도구와 schema를 확인한다. 번들의 도구 schema 후보는 실제 사용 가능 여부를 연결된 서버에서 확인한다.
 
 ## 합성 요청과 완료 기준
 
@@ -26,14 +26,8 @@
 {"tool":"list_models","arguments":{"kind":"llm"}}
 ```
 
-user-principal 저장 직전에 context를 읽는다. 응답의 context_receipt.token을 아래 한 번의 save_agent에 복사한다. placeholder는 실제 호출 전에 응답 token으로 바꾼다. 영수증용 읽기는 `max_tokens`를 기본값(3000) 아래로 낮추지 않는다. `MEMORY_CONTEXT_BUDGET_TOO_SMALL`이 오면 `details.required_tokens` 이상(최대 3000)으로 한 번만 다시 호출하고, 같은 오류가 반복되면 저장하지 않고 초안으로 안내한다.
-
 ```mcp-call
-{"tool":"get_work_context","arguments":{"purpose":"새 Single 생성 전 관련 결정 확인","max_tokens":3000}}
-```
-
-```mcp-call
-{"tool":"save_agent","arguments":{"mode":"create","context_receipt":"<paste the recent context_receipt.token here>","payload":{"name":"샘플 홈케어 문의","data":{"llm":{"model":"<selected list_models item model>"}}}}}
+{"tool":"save_agent","arguments":{"mode":"create","payload":{"name":"샘플 홈케어 문의","data":{"llm":{"model":"<selected list_models item model>"}}}}}
 ```
 
 `save_agent` 응답의 실제 `agent_id`를 받아 현재 상태와 revision을 읽는다. 아래 UUID는 모양을 보이는 합성값이며 실제 호출에서는 반환된 ID를 쓴다.
@@ -44,14 +38,8 @@ user-principal 저장 직전에 context를 읽는다. 응답의 context_receipt.
 
 아래 `expected_head_revision`은 형식을 보이는 예시값이다. 실제 호출에서는 방금 읽은 revision으로 바꾼다. Manual은 현재 agent에 귀속된다.
 
-방금 읽은 agent revision을 확인한 뒤, 제품 저장마다 새 context receipt를 받는다. 이 placeholder는 실제 get_work_context 응답 token으로 바꾼다.
-
 ```mcp-call
-{"tool":"get_work_context","arguments":{"agent_id":"11111111-1111-4111-8111-111111111111","purpose":"Manual 생성 전 agent 결정과 열린 작업 확인","max_tokens":3000}}
-```
-
-```mcp-call
-{"tool":"save_manual","arguments":{"mode":"create","agent_id":"11111111-1111-4111-8111-111111111111","context_receipt":"<paste the recent context_receipt.token here>","payload":{"expected_head_revision":7,"name":"샘플 홈케어 문의 접수","trigger":"고객이 홈케어 서비스나 방문 가능 여부를 문의할 때, 서비스 종류나 지역을 먼저 말할 때, 또는 앞서 말한 접수 정보를 정정할 때. 이미 잡힌 방문의 변경·취소는 제외한다.","content":"## 규칙\n- 범위: 홈케어 서비스 문의 접수만 한다. 가격 확정, 방문 시각 약속, 예약 완료 안내는 하지 않는다.\n- 연결된 가격표와 예약 확인 기능이 없다. 확인이 필요한 질문은 추측하지 않고 \"담당자 확인이 필요합니다.\"라고 말한다.\n- 이미 들은 정보는 다시 묻지 않는다. 정정되면 그 값만 고친다.\n- 완료 조건: 서비스 종류, 날짜 범위, 위치를 확인하고 요약에 동의받은 뒤 \"말씀하신 내용을 확인했습니다.\"라고 안내한다. 예약 확정이나 외부 접수 성공을 말하지 않는다.\n## 진행 절차\n### 시작\n1. 고객이 이미 말한 서비스 종류, 날짜 범위, 위치를 기억하고 아직 듣지 못한 항목의 단계로 이동한다.\n### 서비스 종류\n1. 원하는 서비스 종류를 묻는다.\n### 날짜 범위\n1. 가능한 날짜 범위를 묻는다. 모른다고 하면 \"모름\"으로 기억하고 넘어간다.\n### 위치\n1. 서비스 범위를 좁힌 뒤 위치와 주소를 한 번만 확인한다.\n### 요약 확인\n1. 접수 내용을 요약하고 빠진 점이나 정정이 있는지 묻는다.\n2. 정정하면 그 항목만 고치고 요약을 다시 확인한다.\n3. 맞다고 하면 말씀하신 내용을 확인하고 끝낸다. 예약 확정이나 외부 접수 성공을 말하지 않는다."}}}
+{"tool":"save_manual","arguments":{"mode":"create","agent_id":"11111111-1111-4111-8111-111111111111","payload":{"expected_head_revision":7,"name":"샘플 홈케어 문의 접수","trigger":"고객이 홈케어 서비스나 방문 가능 여부를 문의할 때, 서비스 종류나 지역을 먼저 말할 때, 또는 앞서 말한 접수 정보를 정정할 때. 이미 잡힌 방문의 변경·취소는 제외한다.","content":"## 규칙\n- 범위: 홈케어 서비스 문의 접수만 한다. 가격 확정, 방문 시각 약속, 예약 완료 안내는 하지 않는다.\n- 연결된 가격표와 예약 확인 기능이 없다. 확인이 필요한 질문은 추측하지 않고 \"담당자 확인이 필요합니다.\"라고 말한다.\n- 이미 들은 정보는 다시 묻지 않는다. 정정되면 그 값만 고친다.\n- 완료 조건: 서비스 종류, 날짜 범위, 위치를 확인하고 요약에 동의받은 뒤 \"말씀하신 내용을 확인했습니다.\"라고 안내한다. 예약 확정이나 외부 접수 성공을 말하지 않는다.\n## 진행 절차\n### 시작\n1. 고객이 이미 말한 서비스 종류, 날짜 범위, 위치를 기억하고 아직 듣지 못한 항목의 단계로 이동한다.\n### 서비스 종류\n1. 원하는 서비스 종류를 묻는다.\n### 날짜 범위\n1. 가능한 날짜 범위를 묻는다. 모른다고 하면 \"모름\"으로 기억하고 넘어간다.\n### 위치\n1. 서비스 범위를 좁힌 뒤 위치와 주소를 한 번만 확인한다.\n### 요약 확인\n1. 접수 내용을 요약하고 빠진 점이나 정정이 있는지 묻는다.\n2. 정정하면 그 항목만 고치고 요약을 다시 확인한다.\n3. 맞다고 하면 말씀하신 내용을 확인하고 끝낸다. 예약 확정이나 외부 접수 성공을 말하지 않는다."}}}
 ```
 
 저장 결과의 `manual_id`를 보존하고 실제 리소스를 재조회한다.
@@ -72,14 +60,8 @@ user-principal 저장 직전에 context를 읽는다. 응답의 context_receipt.
 
 Manual 본문 저장은 전체 본문 교체다. 아래 `content`에는 변경 문장뿐 아니라 가격·예약 확정 제한, 요약과 정정 흐름을 포함한 **전체 새 본문**을 보낸다. `expected_head_revision`은 방금 조회한 Manual의 현재 revision으로 교체한다.
 
-Manual의 최신 revision을 다시 읽고, 저장 직전에 새 context receipt를 받는다. 이 placeholder를 실제 token으로 교체한다.
-
 ```mcp-call
-{"tool":"get_work_context","arguments":{"agent_id":"11111111-1111-4111-8111-111111111111","purpose":"Manual 수정 전 최신 결정과 agent head 확인","max_tokens":3000}}
-```
-
-```mcp-call
-{"tool":"save_manual","arguments":{"mode":"update","agent_id":"11111111-1111-4111-8111-111111111111","manual_id":"22222222-2222-4222-8222-222222222222","context_receipt":"<paste the recent context_receipt.token here>","payload":{"expected_head_revision":8,"content":"## 규칙\n- 범위: 홈케어 서비스 문의 접수만 한다. 가격 확정, 방문 시각 약속, 예약 완료 안내는 하지 않는다.\n- 연결된 가격표와 예약 확인 기능이 없다. 확인이 필요한 질문은 추측하지 않고 \"담당자 확인이 필요합니다.\"라고 말한다.\n- 이미 들은 정보는 다시 묻지 않는다. 정정되면 그 값만 고친다.\n- 완료 조건: 서비스 종류, 날짜 범위, 위치를 확인하고 요약에 동의받은 뒤 \"말씀하신 내용을 확인했습니다.\"라고 안내한다. 예약 확정이나 외부 접수 성공을 말하지 않는다.\n## 진행 절차\n### 시작\n1. 고객이 이미 말한 서비스 종류, 날짜 범위, 위치를 기억하고 아직 듣지 못한 항목의 단계로 이동한다.\n### 서비스 종류\n1. 원하는 서비스 종류를 묻는다.\n### 날짜 범위\n1. 가능한 날짜 범위를 묻는다. 모른다고 하면 \"모름\"으로 기억하고 넘어간다.\n### 위치\n1. 고객이 원하는 업무 범위를 파악한 다음 위치와 주소를 한 번만 확인한다. 이미 주소를 들었다면 반복 질문하지 않는다.\n### 요약 확인\n1. 접수 내용을 요약하고 빠진 점이나 정정이 있는지 묻는다.\n2. 정정하면 그 항목만 고치고 요약을 다시 확인한다.\n3. 맞다고 하면 말씀하신 내용을 확인하고 끝낸다. 예약 확정이나 외부 접수 성공을 말하지 않는다."}}}
+{"tool":"save_manual","arguments":{"mode":"update","agent_id":"11111111-1111-4111-8111-111111111111","manual_id":"22222222-2222-4222-8222-222222222222","payload":{"expected_head_revision":8,"content":"## 규칙\n- 범위: 홈케어 서비스 문의 접수만 한다. 가격 확정, 방문 시각 약속, 예약 완료 안내는 하지 않는다.\n- 연결된 가격표와 예약 확인 기능이 없다. 확인이 필요한 질문은 추측하지 않고 \"담당자 확인이 필요합니다.\"라고 말한다.\n- 이미 들은 정보는 다시 묻지 않는다. 정정되면 그 값만 고친다.\n- 완료 조건: 서비스 종류, 날짜 범위, 위치를 확인하고 요약에 동의받은 뒤 \"말씀하신 내용을 확인했습니다.\"라고 안내한다. 예약 확정이나 외부 접수 성공을 말하지 않는다.\n## 진행 절차\n### 시작\n1. 고객이 이미 말한 서비스 종류, 날짜 범위, 위치를 기억하고 아직 듣지 못한 항목의 단계로 이동한다.\n### 서비스 종류\n1. 원하는 서비스 종류를 묻는다.\n### 날짜 범위\n1. 가능한 날짜 범위를 묻는다. 모른다고 하면 \"모름\"으로 기억하고 넘어간다.\n### 위치\n1. 고객이 원하는 업무 범위를 파악한 다음 위치와 주소를 한 번만 확인한다. 이미 주소를 들었다면 반복 질문하지 않는다.\n### 요약 확인\n1. 접수 내용을 요약하고 빠진 점이나 정정이 있는지 묻는다.\n2. 정정하면 그 항목만 고치고 요약을 다시 확인한다.\n3. 맞다고 하면 말씀하신 내용을 확인하고 끝낸다. 예약 확정이나 외부 접수 성공을 말하지 않는다."}}}
 ```
 
 `get_manual(agent_id, manual_id)`로 다시 읽어 주소 규칙이 한 번만 반영되고 다른 제한이 남았는지 확인한다. `409`이면 최신 본문을 다시 읽고 의도를 재적용한다. 쓰기 응답이 불명이면 중복 update를 보내지 말고 알려진 ID를 재조회한다.
@@ -118,7 +100,7 @@ Manual 이름이 맞는 항목이 하나여도 기존 리소스와 이번 create
 
 ### 다른 Thread나 호스트에서 다시 시작하는 경우
 
-번들 후보에는 shared-work 도구 네 개가 있다. 새 Thread나 다른 호스트에서는 실제 tool list와 schema를 먼저 확인하고 get_work_context/get_work_record로 case와 version을 읽는다. 관련 결정·피드백은 별도 기억 키워드를 요구하지 않고 짧게 save_work_record로 남긴다. routine case/event 저장 전 `get_work_context.data.background_settings`의 enabled/revision/epoch를 확인한다. 기본은 켜짐이며 OFF이면 automatic 저장을 멈춘다. 명시적으로 요청한 기존 기록 조회·정정·삭제는 계속 지원한다. 사용자가 현재 대화에서 저장하지 말라고 직접 요청하면 새 기록이나 수정을 하지 않는다. 도구가 없을 때만 현재 대화나 아래 사용자 제공 handoff로 이어가며 다른 Thread를 검색했다고 말하지 않는다.
+새 Thread나 다른 호스트에서는 실제 tool list와 schema를 먼저 확인하고, 현재 대화나 아래 사용자 제공 handoff로 이어가며 다른 Thread를 검색했다고 말하지 않는다.
 
 ```text
 목표: 샘플 홈케어 문의 접수 Manual 완성
@@ -130,61 +112,4 @@ manual_id: <실제 ID>
 다음 행동: 최신 Manual을 다시 읽고 규칙을 좁게 수정한 뒤 고객에게 재시험 사례 전달
 ```
 
-이 fallback 요약은 사용자 제공 handoff이며 서버 기록이 아니다. shared-work 경로에서는 MCP가 반환한 case/record ID와 version을 확인한다. save_work_record 결과가 unknown이면 동일 operation_id로 get_work_operation을 조회하고 POST를 반복하지 않는다. 어느 경로든 재개할 때는 [resume-agent-work](../skills/resume-agent-work/SKILL.md)의 동일 ID·최신 상태 확인 원칙을 적용한다.
-
-
-## 6. Relevant work record: 결정과 고객 피드백
-
-중요한 사용자 결정이나 이후 작업에 영향을 줄 고객 피드백이 나오면 “기억해” 요청을 기다리지 않고 관련 record를 확인한다. 먼저 get_work_context를 읽고, agent case 목록은 아래처럼 찾는다.
-
-```mcp-call
-{"tool":"get_work_context","arguments":{"agent_id":"11111111-1111-4111-8111-111111111111","purpose":"현재 agent의 결정과 열린 개선 case 찾기","max_tokens":1000}}
-```
-
-기존 case 목록은 get_work_record로 확인한다.
-
-```mcp-call
-{"tool":"get_work_record","arguments":{"record_type":"list","agent_id":"11111111-1111-4111-8111-111111111111","limit":20}}
-```
-
-기존 case가 없으면 goal과 success criteria, 최소 source locator로 case를 만든다. operation_id는 매 쓰기마다 새 UUID를 한 번 사용한다.
-
-```mcp-call
-{"tool":"save_work_record","arguments":{"action":"create","payload":{"operation_id":"33333333-3333-4333-8333-333333333333","agent_id":"11111111-1111-4111-8111-111111111111","goal":"홈케어 문의 Manual이 주소를 한 번만 확인하는지 개선한다","success_criteria":"서비스 범위를 확인한 다음 주소를 한 번만 묻고 가격이나 예약을 확정하지 않는다","source":{"source_host":"codex","explicit_quote":"샘플 홈케어 문의를 받는 음성 에이전트를 만들고 싶어요.","observed_at":1790670000000},"expected_settings_revision":1,"expected_settings_epoch":1}}}
-```
-
-Routine automatic 저장의 `expected_settings_revision`과 `expected_settings_epoch`는 최신 get_work_context의 `background_settings`에서 복사한다. 예시 값은 placeholder이므로 실제 설정이 OFF이거나 revision/epoch가 달라졌다면 자동 요청을 보내지 않는다.
-
-기존 case라면 get_work_record의 case version을 읽고 decision_set 또는 feedback_reported event를 append한다. 고객의 “주소를 다시 물었어요”는 고객 보고이며 call 조회 결과가 아니다. 아래 version/ID는 예시이므로 실제 응답값으로 바꾼다.
-
-```mcp-call
-{"tool":"get_work_record","arguments":{"record_type":"case","case_id":"44444444-4444-4444-8444-444444444444"}}
-```
-
-결정은 짧은 typed event로 남긴다.
-
-```mcp-call
-{"tool":"save_work_record","arguments":{"action":"event","case_id":"44444444-4444-4444-8444-444444444444","payload":{"expected_version":1,"operation_id":"55555555-5555-4555-8555-555555555555","source":{"source_host":"codex","explicit_quote":"주소를 먼저 묻지 말고, 어떤 서비스를 원하는지 파악한 다음 한 번만 물어봐 주세요.","observed_at":1790670000000},"payload":{"kind":"decision_set","statement":"업무 범위를 파악한 뒤 주소를 한 번만 묻는다","applicability":"샘플 홈케어 문의"},"expected_settings_revision":1,"expected_settings_epoch":1}}}
-```
-
-고객의 음성 피드백도 같은 case에 보고 event로 기록한다. 고객 보고를 독립 call evidence로 바꾸지 않는다.
-
-```mcp-call
-{"tool":"save_work_record","arguments":{"action":"event","case_id":"44444444-4444-4444-8444-444444444444","payload":{"expected_version":2,"operation_id":"66666666-6666-4666-8666-666666666666","source":{"source_host":"codex","explicit_quote":"두 번째 사례에서 주소를 다시 물었어요.","observed_at":1790670000000},"payload":{"kind":"feedback_reported","statement":"고객 보고: 두 번째 사례에서 주소를 다시 물음. 독립 call 조회는 아직 없음.","customer_tested":true},"expected_settings_revision":1,"expected_settings_epoch":1}}}
-```
-
-독립적인 text-contract holdout은 실제 voice test가 아니다. 아래 입력은 예시일 뿐이며 ID는 합성 값이다. holdout 등록은 자동 경로가 아니라 명시적 events 경로를 쓰므로 `expected_settings_*`를 보내지 않는다. 출처는 사용자가 현재 임베디드 Copilot 대화에서 직접 입력한 본인의 말이어야 하며 `source_host`는 `embedded`여야 한다. `source_thread_id`·`source_message_id`는 같은 턴에서 그 입력이 처리되기 전에 `get_work_context`가 돌려준 `pending_recent_inputs` 항목의 `source_thread_id`·`source_id`를 그대로 복사한 값이다(예: `{"source_id":"99999999-9999-4999-8999-999999999999","source_thread_id":"88888888-8888-4888-8888-888888888888","status":"pending",...}`). `explicit_quote`를 넣으면 그 입력의 부분 문자열이어야 한다. holdout 등록 가능 여부는 호스트 이름(Codex, Claude 등)으로 판단하지 않는다. 결론을 내리기 전에 반드시 `get_work_context(agent_id)`를 먼저 호출한다. `pending_recent_inputs`에 지금 사용자 메시지에 해당하는 항목이 `source_thread_id`와 함께 있으면 그 `source_thread_id`·`source_id`로 등록한다(`source_host`는 `embedded`). 해당 항목이 없으면 등록할 수 없다고 안내한다. `source_thread_id`가 비어 있는 항목도 추측하지 말고 등록하지 않는다. 운영에서는 사용자가 제공한 독립 task와 exact expected artifact를 사용한다. 시나리오는 이스케이프된 JSON 문자열을 손으로 만들지 않고 구조화 필드 `holdout_scenario`(`base_configuration`, `requested_change`, `required_preservation` 1~6개 문자열)로 보낸다. MCP가 `task_kind=agent_partial_edit`를 붙여 정규 `scenario` 문자열을 만들며, 예전 `scenario` 문자열도 받지만 둘을 함께 보내지 않는다. 전체 시나리오는 4096 UTF-8 바이트, `requested_change`와 보존 항목은 각각 1024 바이트 이하여야 한다. `required_preservation`·`required_additions` 값은 설명이 아니라 `base_configuration`·`requested_change`에서 글자 그대로 복사한 문구이며 `expected_result`는 채점되지 않는다. 같은 사실이 여러 곳에 있고 요청이 한쪽만 언급하면 선택 필드 `required_additions`(예: `["오후 8시"]`)와 `retired_literals`(예: `["오후 7시"]`)로 양쪽 반영을 확인한다. `observed_result`는 등록 필수 필드지만 `register_holdout: true`에서는 서버가 caller 값을 폐기하고 실행 전/unverified로 저장한다. expected artifact와 preservation 조건은 model prompt에 전달되지 않고 서버 grader에만 사용된다.
-
-잘못된 예: holdout(`register_holdout: true`) payload에 routine 전용 `expected_settings_revision`·`expected_settings_epoch`(또는 `proposal_id`·비어 있지 않은 `evidence_ids`)를 함께 보내면 INVALID_ARGUMENTS이며 `details.problems`에 허용되지 않는 필드로 표시되므로, 그 필드를 제거하고 같은 operation_id로 다시 보낸다.
-
-```mcp-call
-{"tool":"save_work_record","arguments":{"action":"event","case_id":"44444444-4444-4444-8444-444444444444","payload":{"expected_version":3,"operation_id":"77777777-7777-4777-8777-777777777777","source":{"source_host":"embedded","source_thread_id":"88888888-8888-4888-8888-888888888888","source_message_id":"99999999-9999-4999-8999-999999999999","explicit_quote":"합성 text holdout 등록 예시이며 실제 고객 시험이나 음성 결과가 아닙니다.","observed_at":1790670000000},"payload":{"kind":"evaluation_reported","holdout_scenario":{"base_configuration":"환불 문의에는 영수증을 먼저 요청한다.","requested_change":"배송 지연 문의에는 예상 도착일을 함께 안내한다.","required_preservation":["영수증을 먼저 요청한다"]},"expected_result":"환불 문의에는 영수증을 먼저 요청한다. 배송 지연 문의에는 예상 도착일을 함께 안내한다.","observed_result":"Scenario registered; no provider execution.","evaluation_kind":"text_contract","register_holdout":true}}}}
-```
-
-외부 call transcript 전체를 읽거나 복사하지 않는다. 필요한 것은 짧은 피드백과, 사용자가 제공한 경우 조회에 필요한 call ID뿐이다. get_work_context의 background_settings가 OFF이면 routine create/event를 보내지 않는다. settings CAS가 거부되면 최신 context를 다시 읽기 전에는 반복하지 않는다. 사용자가 현재 대화에서 저장하지 말라고 직접 요청하면 자동 create/event 없이 현재 대화에서만 이어간다. 기존 기록을 사용자가 명시적으로 조회·정정·삭제해 달라고 요청한 경우에는 해당 요청을 지원한다.
-
-save_work_record 응답이 unknown이면 같은 operation_id로 조회한다. 방금 보낸 UUID를 그대로 쓰고 POST를 재전송하지 않는다.
-
-```mcp-call
-{"tool":"get_work_operation","arguments":{"operation_id":"66666666-6666-4666-8666-666666666666"}}
-```
+이 fallback 요약은 사용자 제공 handoff이며 서버 기록이 아니다. 재개할 때는 [resume-agent-work](../skills/resume-agent-work/SKILL.md)의 동일 ID·최신 상태 확인 원칙을 적용한다.
