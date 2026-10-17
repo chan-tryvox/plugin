@@ -44,7 +44,7 @@ metadata:
 내장 도구 선택·참조, 주소 확인 절차와 텍스트/음성 시험 한계는 [Manual 작성](../manual-authoring/SKILL.md#도구-쓰기-tool) 및 [도구별 결과](../manual-authoring/SKILL.md#내장-도구별-신호와-결과)를 따른다.
 
 ## 공통 prompt 작성
-새 Single 또는 공통 prompt 전체를 작성할 때는 공통 음성 규칙을 `# 말투와 발화`에 한 번만 넣고 Manual마다 복사하지 않는다. 실제 발화 문구를 쓰거나 검토할 때 [음성 프롬프트 기본 지침](../../references/voice-prompt-guidance.md)을 적용한다. 기존 Manual만 좁게 고치면 요청 범위를 유지한다. 나머지 prompt·Manual 구조는 [Manual 작성](../manual-authoring/SKILL.md)을 따른다.
+새 Single은 [통화 기본 묶음](../../references/call-baseline.md)을 다 넣고, 공통 음성 규칙은 `# 말투와 발화`에 한 번만 둔다. 실제 발화 문구를 쓰거나 검토할 때 [음성 프롬프트 기본 지침](../../references/voice-prompt-guidance.md)을 적용한다. 기존 Manual만 좁게 고치면 요청 범위를 유지한다. 나머지 prompt·Manual 구조는 [Manual 작성](../manual-authoring/SKILL.md)을 따른다.
 
 ## 부분 성공과 전달
 Single만 저장됐다면 그 `agent_id`에서 Manual 생성 단계를 계속한다. Manual 저장 성공 뒤에는 같은 `agent_id`·`manual_id`로 확인한다. 게시 응답이 불명이면 `list_agent_versions`/`get_agent`로 production 상태를 읽고 다시 호출하지 않는다. `409` revision conflict는 최신 상태를 다시 읽고 의도를 다시 적용할 때만 처리하며, unknown 응답은 새 Single·Manual 생성이나 같은 쓰기로 자동 재시도하지 않는다. Agent 저장 성공을 시험 성공으로 보고하지 않는다. 실제 예약이 목표인데 연동이 없으면 그 결손을 알리고 사용자 목표를 유지한다.
