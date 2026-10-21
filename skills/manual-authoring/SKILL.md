@@ -142,7 +142,7 @@ Manual을 새로 설계할 때 지키고, 저장한 뒤 `get_agent`·`get_manual
 - `no_hit_retry`와 `missing_clue=source_unavailable`(검색 장애)이면 고객에게 다시 말하게 하지 않는다. 자동 재호출 없이 원문으로 접수하고 '확인 필요'를 남긴다.
 - 도구 오류·지연도 자동 재호출 없이 원문과 '확인 필요'를 남긴다. 실제 응답에 없는 값은 추측하지 않는다.
 
-- 종료 도구를 포함해 Manual 본문이 `@tool:`로 부르는 도구는 그 Manual의 `built_in_tools`에 정의한다. 에이전트 공통 `data.built_in_tools`의 도구는 본문에서 부를 수 없다.
+- Manual 본문이 `@tool:`로 부르는 내장 도구(종료 도구 포함)는 그 Manual의 `built_in_tools`에 정의한다. 에이전트 공통 `data.built_in_tools`의 도구는 본문에서 부를 수 없다.
 - 내부 ID·코드·필드명은 읽지 않는다. 고객이 받아 적어야 하는 번호만 한 자리씩 읽는다.
 
 ### 내장 도구별 신호와 결과
