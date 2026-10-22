@@ -1,7 +1,7 @@
 {
-  "version": "0.2.20",
+  "version": "0.2.21",
   "skills_count": 26,
-  "sha256": "321314c79842e3eafe39680f1b66c1e21a1b1cdfd59d4cf3f1960f1625b5b144",
+  "sha256": "d41c453dbf4b38be7036f83fcf347c5d5c37272c07991264a9fe7c4d1d67c4ac",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
@@ -12,7 +12,7 @@
     "references/flow-ars-pattern.md": "6032c524ef92a456a17a82ed087df85e0316ce4f411acde9670a0bbd5e90b15c",
     "references/flow-ars-skeleton.json": "3d4a5baadc694bd78cfaa3f7e0831d19099fadbf51feea77e6a5f37e404c6c82",
     "references/flow-business-contract.md": "798a08075f09fc6c68ce76c52271b0aebd441d4d8fc9cb6ca82a26ca35366b03",
-    "references/host-adapters.md": "a665bb40848e483e1a219e78e66fdbf4b5e1e74866983070774acbb28646bff1",
+    "references/host-adapters.md": "b6e98cd08a29b4bc47356a5d70dc8dd453d1afa43551704e7e62f56f8a18f436",
     "references/implemented-tools.snapshot.json": "481b9c0aaf142e285c99dba1686e3142c419b33e3bcd523196089b800f2894b5",
     "references/manual-examples.md": "864e1b53b47f30267225ff1acfc52531e4de41dc8a9b000fd10f4bafa3356e74",
     "references/tool-schemas/cancel_campaign.json": "9445e92f77db133dfe476101e71321643406ee339fc33107ac9c4f7452f9f83f",
