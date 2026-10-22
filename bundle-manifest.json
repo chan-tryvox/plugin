@@ -1,12 +1,13 @@
 {
-  "version": "0.2.20",
+  "version": "0.2.21",
   "skills_count": 26,
-  "sha256": "321314c79842e3eafe39680f1b66c1e21a1b1cdfd59d4cf3f1960f1625b5b144",
+  "sha256": "bee58bc199610c8f76c258fb48771d23f2f63832c016639d4aca4bc27b318445",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
   "files": {
     "references/call-baseline.md": "57f955d16caee3ed90e1fd30d1706a81d27792f8b558e60100922eb32738c1ea",
+    "references/call-context.md": "dab44cab7b4f48f35b3ba10e7bde9c0ef08b84f2fa2d67923214f42d768dcc4b",
     "references/decision-slots.json": "51b8a1d87374882df03721583cea1b7cc8efbde6c9e0687d416fed4ad80db8b5",
     "references/execution-contract.md": "078642c6a8582cab71be4024e41709c88ce0a1b4bb732eb62d65b096b18988ad",
     "references/flow-ars-pattern.md": "6032c524ef92a456a17a82ed087df85e0316ce4f411acde9670a0bbd5e90b15c",
@@ -85,10 +86,10 @@
     "skills/dashboard-navigation/SKILL.md": "b6bc0c0cf2d2ff8581d0fee3c500352e47a7667e3f9be27a67b444b5d606af40",
     "skills/edit-manual-safely/SKILL.md": "ec8480f6f4a87380dd6349171e26ba3bb7a4fd1ac648c2da6ff4ff746a64a38f",
     "skills/explore-agent-context/SKILL.md": "774d244c36cba2ed9146f7c64ee42bb520fcb8a28fedc681cae8386569aca5de",
-    "skills/inspect-call-evidence/SKILL.md": "8222963ca4d7d51a6e40aa649c964b7bd27228080b6c63d80ac031191a6f0189",
+    "skills/inspect-call-evidence/SKILL.md": "302649f36bcec2935d0a23600e44002830677180b4c8619b868da08e08addaa6",
     "skills/knowledge-grounding/SKILL.md": "193b52d2cd06ecfad4d9cf9f1d93ec845d202303d9c33057475e01600017e099",
     "skills/manual-authoring/SKILL.md": "327c456579e270a35b09f836f169c939a295d236263ffee95ebe58722289003a",
-    "skills/operate-outbound-and-followup/SKILL.md": "6ae04dd480e00ea34b41d36d5410b48b16aa7bf470996eacad6f57485e079713",
+    "skills/operate-outbound-and-followup/SKILL.md": "a4fa4819e80724c4257a9cd9d9460b60c2e304e55d5b9586d1afc0903c6993ca",
     "skills/post-call-result-design/SKILL.md": "0648db9d8d8ebcd87a6443e7ab36080fae5e687abb20752fe3c7051b807ccf4d",
     "skills/prepare-voice-test/SKILL.md": "56ad34fd20e26c7c569c165287b64589e3e37bb3c4b6945cbb138c721cb8e57c",
     "skills/product-documentation/SKILL.md": "20f0c16b4572f17ddfbea8839171da5fb27c043b487a4ec0875c418f379f2a23",

@@ -25,7 +25,7 @@ metadata:
 
 **`EXECUTION_RESULT_UNKNOWN`·`EXECUTION_IN_PROGRESS`이면 다시 실행하지 않는다.** 새 키도 만들지 않는다. 단건은 `list_calls`(`call_to`·`start_at_after`)와 `get_call`, 캠페인은 `get_campaign`/`list_campaigns`로 접수 여부를 읽어 사용자에게 보고하고 추가 실행은 사용자의 새 결정을 받는다. [복귀](../resume-agent-work/SKILL.md)로 이어간다.
 
-설정 저장과 실행 도구를 혼동하지 않는다. 정확한 ID와 반환된 결과 참조를 보존한다. 지원되지 않는 예약 발신·상시 감시를 추가하지 않는다. 통화 전환·SMS를 단독으로 실행하는 MCP 도구는 이 범위에 없다(agent 안의 내장 도구와 Flow 노드는 구축 단계에서 설정한다). 호스트가 실제로 제공하지 않으면 호출하거나 성공했다고 말하지 않는다. 새 대화에서 이어갈 때는 현재 대화나 사용자 handoff를 사용한다. 합성 예시는 [합성 고객 여정](../../references/workflow-examples.md)을 따른다.
+설정 저장과 실행 도구를 혼동하지 않는다. 정확한 ID와 반환된 결과 참조를 보존한다. 지원되지 않는 예약 발신·상시 감시를 추가하지 않는다. 통화 전환·SMS를 단독으로 실행하는 MCP 도구는 이 범위에 없다(agent 안의 내장 도구와 Flow 노드는 구축 단계에서 설정한다). 진행 중인 통화에 외부 사실을 알리는 일은 [통화 중 맥락 넣기](../../references/call-context.md)의 REST API 안내를 따른다. 호스트가 실제로 제공하지 않으면 호출하거나 성공했다고 말하지 않는다. 새 대화에서 이어갈 때는 현재 대화나 사용자 handoff를 사용한다. 합성 예시는 [합성 고객 여정](../../references/workflow-examples.md)을 따른다.
 
 ## 결과와 후속
 모수와 성공/실패/미응답/불명/처리 중을 구분한다. 접수는 연결·업무 성공이 아니다. 캠페인은 `get_campaign`으로 진행을 읽고, 통화별 결과는 `list_calls`(`campaign_id` 필터)와 `get_call`로 확인한다. 고객 식별은 `find_customer`(읽기 전용)를 쓰고 `resolve_customer`는 없으면 고객을 만든다는 점을 알린 뒤 쓴다. 실패 대상만 재실행할 때도 실제 실행 여부를 먼저 확인하고 사용자 의도 범위 안에서 새 시트·새 키로 진행한다. 상세 통화는 필요한 접근 범위로만 읽는다. 내용 분석은 [통화 성과](../review-call-performance/SKILL.md)로 이어간다.
