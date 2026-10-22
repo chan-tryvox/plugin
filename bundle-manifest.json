@@ -1,7 +1,7 @@
 {
-  "version": "0.2.20",
+  "version": "0.2.21",
   "skills_count": 26,
-  "sha256": "321314c79842e3eafe39680f1b66c1e21a1b1cdfd59d4cf3f1960f1625b5b144",
+  "sha256": "034a92ba6bcb928ae303aa82240a2b66f75d07fded720976c81f8fe21d8467a0",
   "capability_directories": [
     "/workspace/vox-ai/skills"
   ],
@@ -9,7 +9,7 @@
     "references/call-baseline.md": "57f955d16caee3ed90e1fd30d1706a81d27792f8b558e60100922eb32738c1ea",
     "references/decision-slots.json": "51b8a1d87374882df03721583cea1b7cc8efbde6c9e0687d416fed4ad80db8b5",
     "references/execution-contract.md": "078642c6a8582cab71be4024e41709c88ce0a1b4bb732eb62d65b096b18988ad",
-    "references/flow-ars-pattern.md": "6032c524ef92a456a17a82ed087df85e0316ce4f411acde9670a0bbd5e90b15c",
+    "references/flow-ars-pattern.md": "00a94d5143b4d696a11fd81ccf7b2c8d54a133e147a52144cf769f73a3fdb253",
     "references/flow-ars-skeleton.json": "3d4a5baadc694bd78cfaa3f7e0831d19099fadbf51feea77e6a5f37e404c6c82",
     "references/flow-business-contract.md": "798a08075f09fc6c68ce76c52271b0aebd441d4d8fc9cb6ca82a26ca35366b03",
     "references/host-adapters.md": "a665bb40848e483e1a219e78e66fdbf4b5e1e74866983070774acbb28646bff1",
@@ -99,7 +99,7 @@
     "skills/troubleshoot-agent-tool/SKILL.md": "ca1da2c59ad2e31ba64d76c11794ca6919e8765a2434ac588a2d385346354c10",
     "skills/try-and-improve-voice-agent/SKILL.md": "efee37445a6b5799be670c1d4b937012a1810fef9117e9ecb140c4d213752699",
     "skills/tune-voice-behavior/SKILL.md": "8fe38530a4800a11bb2574c52846485a9002d8b38f13ad29dc8072d8882d8f7f",
-    "skills/voice-agent-design/SKILL.md": "f4f9e75abc62b75c037dcc91b8d749ad7b514b810f07ef7df65fe3ac598bb8d0",
+    "skills/voice-agent-design/SKILL.md": "024bf133b2a2e9e655a50cfd7dcf121f9cc74149be79e358266e935332d3301a",
     "skills/voice-interaction-design/SKILL.md": "6e617441c7a749cc42e64c0a84bb6cf0ca9ebd58ea565fe7671749e51bd7238d"
   }
 }

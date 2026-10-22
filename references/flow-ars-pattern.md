@@ -12,7 +12,7 @@
 - `extraction` 노드는 나가는 edge가 정확히 1개여야 하고 `skip_user_response: true`다.
 - `begin`의 나가는 edge는 `fallback` 1개만 둘 수 있다. `begin` → `condition` 노드 진입은 가능하다.
 - 시스템 변수 `current_time`은 통화 시작 시각을 KST 문자열 `YYYY-MM-DD HH:MM:SS+0900 (Ddd)`로 담는다(예: `2026-10-01 14:30:00+0900 (Thu)`). logic `left`에 그대로 쓸 수 있고, 값은 통화 중 고정된다.
-- **무입력(침묵)은 전환을 일으키지 않는다.** 노드가 약 10초 뒤 같은 안내를 다시 말하고, 이후 간격이 3초씩 늘며 반복된다. `silenceCallTimeoutInSeconds`에 닿으면 통화가 끝난다.
+- **무입력(침묵)은 전환을 일으키지 않는다.** 노드가 같은 안내를 다시 말하는 재촉만 일어나고, `silenceCallTimeoutInSeconds`에 닿으면 통화가 끝난다. 재촉은 값을 정하지 않으면 현재 기본대로 약 10초 뒤에 시작해 간격이 3초씩 늘어 최대 약 25초이고 횟수 제한이 없다. 연결된 `save_agent` 스키마에 `callSettings.silenceReminderTimeoutInSeconds`(10~300초, `silenceCallTimeoutInSeconds`보다 작게)와 `silenceReminderMaxCount`(0~10, 0이면 재촉 끔)가 있으면 간격과 횟수를 정할 수 있다. 둘 다 비우거나 null이면 기본 재촉이다. 횟수를 다 써도 전환이나 종료는 일어나지 않는다.
 - `sendSms`는 통화 중 그 노드에 도달한 순간 발송된다. 통화 후 발송 기능은 없다.
 - warm 전환은 상대를 transferCall 노드의 `ring_duration_in_seconds`초(1~90, 비우면 30) 호출한다. 받지 않으면 transferCall의 `fallback` edge로 이어진다. cold 전환은 실패해도 ARS로 돌아오지 않는다.
 
@@ -124,7 +124,7 @@ static 문구(안내·전환·종료)에는 아라비아 숫자와 기호를 쓰
   - `dtmfInterruptible: true`: 키를 누르면 안내를 바로 멈춘다.
   - `dtmfTimeoutSeconds: 1`: 한 자리 메뉴라 1초면 된다.
   - `dtmfTerminationEnabled: false`
-  - `silenceCallTimeoutInSeconds: 45~60`: 재안내 2~3회 뒤 종료된다(추정).
+  - `silenceCallTimeoutInSeconds: 45~60`: 기본 재촉이면 재안내 2~3회 뒤 종료된다(추정). 재안내 횟수를 맞춰야 하고 스키마에 있으면 `silenceReminderTimeoutInSeconds`(예: 15)와 `silenceReminderMaxCount`(예: 2)를 함께 둔다. 재촉 간격은 `silenceCallTimeoutInSeconds`보다 짧아야 하고, 횟수를 다 써도 통화는 `silenceCallTimeoutInSeconds`에 닿아야 끝난다.
 - `speech.isAllowInterruption: true`. 노드마다 `is_allow_interruption: true`도 함께 둔다.
 - `presetDynamicVariables`: §2의 초깃값.
 - `prompt.prompt`: "한국어 존댓말. 변수·노드·코드 이름을 고객에게 읽지 않는다."
@@ -132,9 +132,9 @@ static 문구(안내·전환·종료)에는 아라비아 숫자와 기호를 쓰
 - 노드 `data` 키는 snake_case, agent `data` 키는 camelCase다. 섞어 쓰지 않는다.
 
 ## 10. 지금 안 되는 것: 무입력 → 재안내 → 직원 연결
-**무입력은 분기 조건이 될 수 없다.** "무입력이면 1회 재안내 후 직원 연결"은 현재 구현할 수 없다. 무입력 횟수 변수, 무입력 edge 문구, 무입력 재안내 노드를 만들지 않는다. 만들어도 실행되지 않는다. 저장 보고에서 사용자에게 그대로 말한다.
+**무입력은 분기 조건이 될 수 없다.** "무입력이면 1회 재안내 후 직원 연결"은 현재 구현할 수 없다. 무입력 횟수 변수, 무입력 edge 문구, 무입력 재안내 노드를 만들지 않는다. 만들어도 실행되지 않는다. `silenceReminderMaxCount`로 재안내 횟수를 정해도 횟수를 다 쓴 뒤 직원 연결 같은 전환은 없고 통화는 무응답 종료 시간에 끝난다. 저장 보고에서 사용자에게 그대로 말한다.
 
-> 무입력(침묵)은 지금 Flow에서 분기 조건으로 쓸 수 없습니다. 무입력이면 같은 안내를 약 10초 뒤부터 다시 말하고, 설정한 무응답 종료 시간(예: 50초)이 지나면 통화를 정중히 종료합니다. 그래서 '재안내 후 직원 연결'은 구현하지 못했고, 대신 잘못된 입력이나 알아듣지 못한 말이 두 번 이어지면 직원 연결로 보내도록 했습니다.
+> 무입력(침묵)은 지금 Flow에서 분기 조건으로 쓸 수 없습니다. 무입력이면 같은 안내를 약 10초 뒤부터 다시 말하고(재안내 간격과 횟수를 정해 두었다면 그 값대로), 설정한 무응답 종료 시간(예: 50초)이 지나면 통화를 정중히 종료합니다. 그래서 '재안내 후 직원 연결'은 구현하지 못했고, 대신 잘못된 입력이나 알아듣지 못한 말이 두 번 이어지면 직원 연결로 보내도록 했습니다.
 
 ## 11. 알려진 함정
 - 키마다 AI edge, `conversation` 노드의 `fallback`, 무입력 self-loop는 쓰지 않는다. 각각 분기가 흔들리거나, 저장이 거부되거나, 실행되지 않는다.

@@ -79,7 +79,7 @@ metadata:
 - 시각·요일·휴일처럼 값으로 갈리는 분기도 `condition` 노드의 `logic` 조건이다. `begin`의 나가는 edge는 `fallback` 조건만 허용하므로 `begin` → `condition` 노드로 분기한다. `current_time`을 logic 변수로 쓸 수 있다. logic edge는 저장 순서대로 평가해 처음 맞는 것을 택하므로 휴일 edge를 영업시간 edge보다 앞에 둔다.
 - `conversation` 노드에는 `fallback` edge를 달 수 없고 저장이 거부된다. ‘그 밖의 입력’은 AI 조건 edge로 쓴다. 실패 후 접수나 대표 연결로 복귀해야 하는 `transferCall`은 반드시 `transfer_type: "warm"`과 실패 `fallback` edge를 쓴다. cold는 이 요구에 쓰지 않는다. 다른 agent로는 `transferAgent`다.
 - self-loop(자기 자신으로 돌아오는 edge)는 ‘0번 다시 듣기’처럼 입력이 있을 때의 재안내에만 쓴다. 무입력용 self-loop는 만들지 않는다.
-- **무입력(침묵)은 전환 조건이 아니다.** ‘무입력 → 재안내 → 직원 연결’은 지금 만들 수 없다. 무입력 변수·edge·노드를 만들지 말고, 같은 안내가 반복되다 설정한 무응답 시간에 통화가 끝난다는 한계를 사용자에게 알린다.
+- **무입력(침묵)은 전환 조건이 아니다.** ‘무입력 → 재안내 → 직원 연결’은 지금 만들 수 없다. 무입력 변수·edge·노드를 만들지 말고, 같은 안내가 반복되다 설정한 무응답 시간에 통화가 끝난다는 한계를 알린다(재촉 설정은 ARS 패턴 §9).
 - `sendSms`가 `fire_and_forget`이면 성공 edge의 AI 조건 문구는 정확히 "요청 성공 시"여야 한다. 인바운드에서 `sms_from_number`를 생략하면 고객이 건 번호로 나간다.
 - `validate_flow`는 cold 전환(실패해도 돌아오지 않음)과 logic 변수 이름 오타를 잡지 못한다. 직접 확인한다.
 
