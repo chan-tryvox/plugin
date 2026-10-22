@@ -1,6 +1,6 @@
 {
-  "mcp_commit": "d49cfbfefb7723bafbfe1f0fab9127664d5f62b1",
-  "manifest_sha256": "cc909909622c8f31deeb409a42306cd57c16d11cb52fb4394550c8fba6fda650",
+  "mcp_commit": "ebf0fc158104357d6b2c8820c9923bbfd7ada77f",
+  "manifest_sha256": "03d58fd8218ca9e7f88f53d76fa8cad3bfc012825313f29e3d7439a9fd77741f",
   "source_manifest_sha256": "f7c583c38b19d9d910233c285f012783acb840f0aa027dd9821e42d919224c3c",
   "source_state": "clean_commit",
   "dirty_contracts": [],
@@ -114,7 +114,7 @@
     "save_customer": "66a41781581eef0961ea3f03b572e4bb8927b3cc4b0604867ee75ed17480872b",
     "save_customer_attribute_definition": "f6f964fbac7d91421d55eb9ce99fac8af481c2225ac623fc404388e9fff15521",
     "save_manual": "a7f6a4b9dcc7693f8626ff539f9e3e0c5e7d533da8c96de7632f08aedfeb0acf",
-    "save_tool": "eed63880366b141980f680e70057a6e48b843cd75ffdf8b143af211e302df74d",
+    "save_tool": "71d7bd1ed952d654e757f689969e87f7f03271062c60d294042f0962629e7b7a",
     "set_number_agents": "2ed40604eae7ab66cf87b6a031138c00f5dba8851f8c88b35efb1867a84b3b5b",
     "set_organization": "b12310a95ff2b797dbb045b0b53cff7fc013b2412e69be193778d2755df00031",
     "update_number": "f9a3206c8e52988ffccac582947fe0d1f56a71426097d80a026e41e5ed16e505",
