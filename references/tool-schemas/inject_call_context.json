@@ -1,0 +1,68 @@
+{
+  "name": "inject_call_context",
+  "inputSchema": {
+    "type": "object",
+    "additionalProperties": false,
+    "properties": {
+      "call_id": {
+        "type": "string",
+        "format": "uuid",
+        "title": "Call Id",
+        "description": "Call identifier."
+      },
+      "idempotency_key": {
+        "type": "string",
+        "description": "Required key for safely retrying this side-effecting request for 24 hours. Values must be non-empty and at most 255 characters.",
+        "minLength": 1,
+        "maxLength": 255,
+        "title": "Idempotency-Key"
+      },
+      "payload": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text",
+            "description": "통화에 넣을 맥락 텍스트입니다. 공백만 있는 값은 거부하며, 직렬화한 control envelope이 16 KiB(UTF-8 bytes)를 넘으면 거부합니다. 이후 모든 추론에 사업장 시스템이 보낸 외부 데이터로 들어가며 사용자 발화나 지시로 취급되지 않습니다."
+          },
+          "response": {
+            "type": "string",
+            "enum": [
+              "none",
+              "when_idle",
+              "interrupt_agent"
+            ],
+            "title": "Response",
+            "description": "`none`은 맥락을 기억만 하고 먼저 말하지 않습니다(다음 사용자 턴의 응답부터 참고). `when_idle`은 통화가 조용해지는 순간 에이전트가 한 번 먼저 말하도록 예약합니다. `interrupt_agent`는 에이전트가 말하는 중이면 그 발화를 끊고 바로 이 맥락으로 응답하게 합니다(사용자가 말하는 중이면 그 턴이 끝난 뒤 응답에 합칩니다).",
+            "default": "none"
+          },
+          "expires_in_seconds": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "maximum": 180.0,
+            "minimum": 1.0,
+            "title": "Expires In Seconds",
+            "description": "`when_idle`·`interrupt_agent`에서만 지정할 수 있는 응답 **시작**까지의 대기 기한(초). 1~180 범위이며 생략하면 90초입니다. `response=none`에서 지정하거나 범위를 벗어나면 `INVALID_CONTEXT_REQUEST`로 거부합니다."
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "InjectCallContextRequest",
+        "description": "통화에 넣을 맥락. text는 필수이고, response는 none(기본)·when_idle·interrupt_agent 중 하나다. expires_in_seconds는 when_idle·interrupt_agent에서만 쓴다."
+      }
+    },
+    "required": [
+      "call_id",
+      "idempotency_key",
+      "payload"
+    ]
+  }
+}

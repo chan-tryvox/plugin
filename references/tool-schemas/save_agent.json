@@ -602,6 +602,34 @@
             "default": 30,
             "description": "Maximum silence duration in seconds before timeout handling."
           },
+          "silenceReminderTimeoutInSeconds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 300.0,
+                "minimum": 10.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Silenceremindertimeoutinseconds",
+            "description": "Seconds to wait after the agent's last audio before each silence reminder (10-300). Must be shorter than silenceCallTimeoutInSeconds. null or omitted keeps the legacy cadence (10 seconds, then 3 seconds longer per consecutive silence, up to 25 seconds)."
+          },
+          "silenceReminderMaxCount": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 10.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Silenceremindermaxcount",
+            "description": "Maximum silence reminders per consecutive-silence segment (0-10). 0 turns reminders off; the call-level silence timeout still ends the call. null or omitted keeps the legacy behavior of no count limit."
+          },
           "ringDurationInSeconds": {
             "anyOf": [
               {

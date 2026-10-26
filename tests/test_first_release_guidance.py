@@ -149,7 +149,7 @@ class FirstReleaseGuidanceTests(unittest.TestCase):
         self.assertEqual(snapshot["native_tools"], ["list_organizations", "set_organization"])
         self.assertEqual(snapshot["public_excluded"], [])
         self.assertTrue({"validate_flow", "create_voice_model", *snapshot["native_tools"]} <= implemented)
-        self.assertEqual(len(implemented), 54)
+        self.assertEqual(len(implemented), 55)
         for skill in json.loads(read("catalog.json"))["skills"]:
             self.assertTrue(set(skill["tools"]["implemented"]) <= implemented, skill["name"])
 

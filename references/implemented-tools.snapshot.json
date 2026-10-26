@@ -2,8 +2,8 @@
   "snapshot_date": "2026-10-01",
   "scope": "Local MCP source contract candidate. The source worktree state is recorded below; this is not a deployed-server inventory. A connected host may expose fewer tools or permissions; inspect its live tools and schemas before acting.",
   "source": {
-    "mcp_commit": "d49cfbfefb7723bafbfe1f0fab9127664d5f62b1",
-    "manifest_sha256": "cc909909622c8f31deeb409a42306cd57c16d11cb52fb4394550c8fba6fda650",
+    "mcp_commit": "08c8a8c14c6a23464aa04337cc9ceeded764b350",
+    "manifest_sha256": "54607501c556565f6b9f9a35ed476b827acaeebbb746d4b598bb838194b8de49",
     "source_manifest_sha256": "f7c583c38b19d9d910233c285f012783acb840f0aa027dd9821e42d919224c3c",
     "source_state": "clean_commit",
     "dirty_contracts": []
@@ -34,6 +34,7 @@
     "get_sheet",
     "get_tool",
     "import_knowledge_documents",
+    "inject_call_context",
     "instantiate_agent_template",
     "launch_campaign",
     "list_agent_templates",
@@ -150,6 +151,10 @@
       "path": "tool-schemas/import_knowledge_documents.json",
       "sha256": "5feea33c832ab8e98e2eb6c033bff55e01b512b7c496f593efe0e8d8b62e10e4"
     },
+    "inject_call_context": {
+      "path": "tool-schemas/inject_call_context.json",
+      "sha256": "f807a306d56aa77e8ac726b2156796842ffa7dda25bb280a0ea3b983332395a0"
+    },
     "instantiate_agent_template": {
       "path": "tool-schemas/instantiate_agent_template.json",
       "sha256": "ff9aa41c4566d4fc66cbbfb28e63212ebd72efb5daf3b31b4c0df0c68ac6f752"
@@ -248,7 +253,7 @@
     },
     "save_agent": {
       "path": "tool-schemas/save_agent.json",
-      "sha256": "f1d26cd95eb39629a843b7b422a79dc294a3c1498a8ae1681203d820f92befa0"
+      "sha256": "dccb58403c01e43ce92d91b9e001a98a97a9143a0f67d5d65f06c0c9f5aab3ae"
     },
     "save_customer": {
       "path": "tool-schemas/save_customer.json",
@@ -264,7 +269,7 @@
     },
     "save_tool": {
       "path": "tool-schemas/save_tool.json",
-      "sha256": "eed63880366b141980f680e70057a6e48b843cd75ffdf8b143af211e302df74d"
+      "sha256": "71d7bd1ed952d654e757f689969e87f7f03271062c60d294042f0962629e7b7a"
     },
     "set_number_agents": {
       "path": "tool-schemas/set_number_agents.json",
